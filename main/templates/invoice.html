@@ -51,9 +51,9 @@
                                     <th>GST Amount</th>
                                     <th>Total Amount</th>
                                     <th>Bill PDF</th>
+                                    <th>Soft</th>
                                     <th>Annexure</th>
                                     <th>HSN Code</th>
-                                    <th>Soft Copy</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,9 +70,9 @@
                                     <td>{{i.GSTAmount}}</td>
                                     <td>{{i.TotalAmount}}</td>
                                     <td><a href="TaxInvoice/{{i.id}}" class="btn btn-success btn-sm"><i class="bi bi-printer fs-5"></i></a></td>
+                                    <td><a href="SoftCopy/{{i.id}}" class="btn btn-warning btn-sm"><i class="bi bi-printer fs-5"></i></a></td>
                                     <td><a href="ETOE/{{i.id}}" class="btn btn-primary btn-sm"><i class="bi bi-printer fs-5"></i></a></td>
                                     <td><a href="HSN/{{i.id}}" class="btn btn-info btn-sm"><i class="bi bi-printer fs-5"></i></a></td>
-                                    <td><a href="SoftCopy/{{i.id}}" class="btn btn-warning btn-sm"><i class="bi bi-printer fs-5"></i></a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

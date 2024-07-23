@@ -6,18 +6,18 @@
     <div class="position-relative container-fluid px-0">
         <div class="row align-items-center position-relative">
             <div class="col-md-5 col-9 mb-4 mb-lg-0">
-                <h3 class="mb-2">Add Call Entry</h3>
+                <h3 class="mb-2">Add Call Entery</h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item">Call Entry</li>
-                        <li class="breadcrumb-item active">Add Call Entry</li>
+                        <li class="breadcrumb-item">Call Entery</li>
+                        <li class="breadcrumb-item active">Add Call Entery</li>
                     </ol>
                 </nav>
             </div>
             <div class="col-md-7 col-3 text-md-end">
                 <div class="d-flex justify-content-md-end align-items-center">
-                    <a href="/CallEntry" class="btn btn-outline-success mb-2 me-2">Back</a>
+                    <a href="/CallEntery" class="btn btn-outline-success mb-2 me-2">Back</a>
                 </div>
             </div>
             <div class="col-12">
@@ -38,7 +38,7 @@
             <div class="col-12 mb-4">
                 <div class="card h-100">
                     <div class="card-header">
-                        <h5 class="mb-1">Add Call Entry</h5>
+                        <h5 class="mb-1">Add Call Entery</h5>
                         <p class="test-end">Financial Year : 2023-2024</p>
                     </div>
                     <div class="card-body">
@@ -67,7 +67,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label for="" class="form-label">Code</label>
+                                <label for="" class="form-label">Location Code</label>
                                 <input type="text" name="Code" class="form-control" id="Code" required readonly>
                             </div>
                             <div class="col-md-4">
@@ -133,19 +133,6 @@
                                     class="form-label">WorkOrder Close Date</label>
                                 <input id="CloseDate" class="form-control" name="CloseDate" type="date"  required>
                             </div>
-                            <!-- <div class="col-md-6" >
-                                <div class="row"> -->
-                            <!-- <div class="col-md-6">
-                                        <label for="singleDatePicker" class="form-label">WorkOrder Date</label>
-                                        <input id="singleDatePicker" class="form-control" name="Date" type="date">
-                                    </div> -->
-                            <!-- <div class="col-md-6">
-                                        <label for="singleDatePicker" class="form-label">WorkOrder Close Date</label>
-                                        <input id="singleDatePicker" class="form-control" name="CloseDate" type="date">
-                                    </div> -->
-                            <!-- </div>
-                            </div> -->
-
                             <div class="col-md-3">
                                 <label for="inputState" class="form-label">Cost Code</label>
                                 <select id="CostCode" class="form-select" name="CostCode" required>
@@ -160,6 +147,16 @@
                                 <input type="text" class="form-control" id="CCName" name="CCName" readonly>
                             </div>
                             <div class="col-md-3">
+                                <label for="inputCity" class="form-label">Challan No.</label>
+                                <input type="text" class="form-control" name="ChallanNo" id="CNC" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="singleDatePicker" class="form-label">Challan /Work Start
+                                    Date</label>
+                                <input id="ChallanDate" class="form-control" name="ChallanDate" type="date"
+                                    required>
+                            </div>
+                            <div class="col-md-3">
                                 <label for="" class="form-label">Contact No</label>
                                 <input type="number" class="form-control" name="ContactNo" id="" >
                             </div>
@@ -170,16 +167,6 @@
                             <div class="col-md-3">
                                 <label for="inputEmail4" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="inputEmail4" name="Email">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="inputCity" class="form-label">Challan No.</label>
-                                <input type="number" class="form-control" name="ChallanNo" id="inputCity" required>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="singleDatePicker" class="form-label">Challan /Work Start
-                                    Date</label>
-                                <input id="singleDatePicker" class="form-control" name="ChallanDate" type="date"
-                                    required>
                             </div>
                             <div class="col-md-4">
                                 <label for="inputState" class="form-label">Call Allocated To</label>
@@ -222,7 +209,7 @@
                             <div class="col-md-12">
                                 <div class="row justify-content-center">
                                     <button type="submit" class="col-5 btn btn-success m-1">Save</button>
-                                    <a class="col-5 btn btn-warning m-1" href="/EntryClase">Clase</a>
+                                    <a class="col-5 btn btn-warning m-1" href="/EnteryClase">close</a>
                                 </div>
                             </div>
                         </form>
@@ -241,11 +228,9 @@
                                         <select class="form-select" name="RCCode" id="RCCode" required>
                                             <option selected>--Select--</option>
                                             {% for i in RC %}
-                                            <option value="{{i.CodeNo}}">{{i.CodeNo}}</option>
+                                            <option value="{{i.CodeNo}}">{{i.CodeNo}} -- {{i.Description}}</option>
                                             {% endfor %}
                                         </select>
-                                        <!-- <label for="" class="form-label"></label>
-                                    <input type="text" class="form-control" id="RCCode" required> -->
                                         <input type="hidden" name="sid" id="sid">
                                         <input type="hidden" id="Counter" value="{{CM.Counter}}">
                                     </div>
@@ -259,19 +244,19 @@
                             <div class="col-md-6 row justify-content-center mt-2">
                                 <div class="col-6 ">
                                     <label for="inputCity" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" id="Quantity"  placeholder="0" required>
+                                    <input type="text" class="form-control" id="Quantity"  placeholder="0" required>
                                 </div>
                                 <div class="col-6">
                                     <label for="inputCity" class="form-label">Rate</label>
-                                    <input type="number" class="form-control" id="Rate" placeholder="0" required>
+                                    <input type="text" class="form-control" id="Rate" placeholder="0" required>
                                 </div>
                                 <div class="col-6 mt-2">
                                     <label for="inputCity" class="form-label">Labour</label>
-                                    <input type="number" class="form-control" id="Labour" value="0" placeholder="0">
+                                    <input type="text" class="form-control" id="Labour" value="0" placeholder="0">
                                 </div>
                                 <div class="col-6 mt-2">
                                     <label for="inputCity" class="form-label">Amount</label>
-                                    <input type="number" class="form-control" id="Amount" placeholder="0" required>
+                                    <input type="text" class="form-control" id="Amount" placeholder="0" required>
                                 </div>
                                 <button type="submit" class="col-6 mt-2 btn btn-success">Save</button>
                             </div>
@@ -409,17 +394,43 @@
             });
         }
     });
+    $("#formAdd input[name='ChallanNo']").on('keydown keyup', function () {
+        var $this = $(this);
+        if ($this.val() != '') {
+            $.ajax({
+                url: '/ChallanNoC',
+                type: 'POST',
+                data: { CN: $this.val() },
+                success: function (resp) {
+                    let v = document.getElementById("CNC");
+                    v.className = "";
+                    if (resp.RC == 1) {
+                        v.className = "form-control border border-2 border-danger";
+                    }
+                    else {
+                        v.className = "form-control border border-2 border-success";
+                    }
+                },
+                error: function (resp) {
+                    console.log('Something went wrong');
+                }
+            });
+        }
+    });
     $("#formAdd select[name='City']").on('change', function () {
         var $this = $(this);
+        PN = $('#Party').val();
         if ($this.val() != '') {
             $("#formAdd select[name='Branch']").find('.after2').nextAll().remove();
             $.ajax({
-                url: '/Branch/' + $this.val(),
-                type: 'GET',
+                url: '/Branch',
+                type: 'POST',
+                data: { value: PN,City: $this.val() },
                 success: function (resp) {
                     let options = '';
                     resp.Branch.forEach(City => {
                         City2 = City.replace(" ", "%20");
+                        City2 = City2.replace(" ", "%20");
                         options += '<option value=' + City2 + '>' + City + '</option>';
                     });
                     $("#formAdd select[name='Branch']").find('.after2').after(options);
@@ -510,9 +521,9 @@
         if (num1 == '') {
             num1 = 0;
         }
-        var total_amount = parseInt(num1) * parseInt(num2) + parseInt(num3);
+        var total_amount = Number(num1) * Number(num2) + Number(num3);
         if (!isNaN(total_amount)) {
-            $Amount.val(total_amount);
+            $Amount.val(total_amount.toFixed(2));
         }
     }
     $Quantity.on("keydown keyup", function () {
@@ -536,6 +547,9 @@
                 success: function (resp) {
                     RCV = $('#Rate');
                     RCV.val(resp.RC);
+                    RCV2 = $('#RCDescription');
+                    RCV2.val(resp.RCDescription);
+
                 },
                 error: function (resp) {
                     console.log('Something went wrong');
@@ -550,10 +564,23 @@
 
     function datass(){
         document.getElementById("CloseDate").setAttribute("min",$Date.val());
+        document.getElementById("ChallanDate").setAttribute("min",$Date.val());
     }
     $Date.on("change select", function () {
         datass();
         $("#CloseDate").val('');
+        $("#ChallanDate").val('');
+
+    });
+
+    var $Date2 = $('#CloseDate');
+
+    function datass2(){
+        document.getElementById("ChallanDate").setAttribute("max",$Date2.val());
+    }
+    $Date2.on("change select", function () {
+        datass2();
+        $("#ChallanDate").val('');
     });
 </script>
 {% endblock script %}

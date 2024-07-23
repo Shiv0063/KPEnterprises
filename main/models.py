@@ -61,7 +61,7 @@ class RateModel(models.Model):
     Description = models.TextField() 
     HSNCode = models.IntegerField(default=0)
     Unit = models.CharField(max_length=100)
-    Rate = models.IntegerField(default=0)
+    Rate = models.CharField(max_length=100,null=True, blank=True)
     Remarks = models.TextField() 
     GSTName = models.CharField(max_length=100)
     SGST = models.IntegerField(default=0)

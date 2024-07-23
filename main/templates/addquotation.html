@@ -184,20 +184,20 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <label for="inputCity" class="form-label">Quantity</label>
-                                        <input type="number" class="form-control" id="Quantity" placeholder="0"
+                                        <input type="text" class="form-control" id="Quantity" placeholder="0"
                                             required>
                                     </div>
                                     <div class="col-6">
                                         <label for="inputCity" class="form-label">Rate</label>
-                                        <input type="number" class="form-control" id="Rate" placeholder="0" required>
+                                        <input type="text" class="form-control" id="Rate" placeholder="0" required>
                                     </div>
                                     <div class="col-6 mt-2">
                                         <label for="inputCity" class="form-label">Labour</label>
-                                        <input type="number" class="form-control" id="Labour" value="0" placeholder="0">
+                                        <input type="text" class="form-control" id="Labour" value="0" placeholder="0">
                                     </div>
                                     <div class="col-6 mt-2">
                                         <label for="inputCity" class="form-label">Amount</label>
-                                        <input type="number" class="form-control" id="Amount" placeholder="0" required>
+                                        <input type="text" class="form-control" id="Amount" placeholder="0" required>
                                     </div>
                                 </div>
                             </div>
@@ -360,9 +360,9 @@
         if (num1 == '') {
             num1 = 0;
         }
-        var total_amount = parseInt(num1) * parseInt(num2) + parseInt(num3);
+        var total_amount = Number(num1) * Number(num2) + Number(num3);
         if (!isNaN(total_amount)) {
-            $Amount.val(total_amount);
+            $Amount.val(total_amount.toFixed(2));
         }
     }
     $Quantity.on("keydown keyup", function () {

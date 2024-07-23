@@ -6,17 +6,17 @@
     <div class="position-relative container-fluid px-0">
         <div class="row align-items-center position-relative">
             <div class="col-md-5 col-9 mb-4 mb-lg-0">
-                <h3 class="mb-2">Call Entry</h3>
+                <h3 class="mb-2">Call Entery</h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active">Call Entry</li>
+                        <li class="breadcrumb-item active">Call Entery</li>
                     </ol>
                 </nav>
             </div>
             <div class="col-md-7 col-3 text-md-end">
                 <div class="d-flex justify-content-md-end align-items-center">
-                    <a href="/AddCallEntry" class="btn btn-outline-success mb-2 me-2">Add Call Entry</a>
+                    <a href="/AddCallEntery" class="btn btn-outline-success mb-2 me-2">Add Call Entery</a>
                 </div>
             </div>
             <div class="col-12">
@@ -40,10 +40,11 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Party Name</th>
-                                    <th>Code</th>
+                                    <th>Location Code</th>
                                     <th>City</th>
                                     <th>Branch</th>
                                     <th>Call Type</th>
+                                    <th>Call No</th>
                                     <th>Call Date</th>
                                     <th>Call Close Date</th>
                                     <th>Cluster</th>
@@ -60,7 +61,6 @@
                                     <th>Work Engaged Other</th>
                                     <th>Cost Code</th>
                                     <th>Cost Code Name</th>
-                                    <th>Call No</th>
                                     <th>Estimate Recd.</th>
                                     <th>Action</th>
                                 </tr>
@@ -74,6 +74,7 @@
                                     <td>{{i.City}}</td>
                                     <td>{{i.Branch}}</td>
                                     <td>{{i.CallType}}</td>
+                                    <td>{{i.CodeNo}}</td>
                                     <td>{{i.NDate}}</td>
                                     <td>{{i.NCloseDate}}</td>
                                     <td>{{i.Cluster}}</td>
@@ -90,9 +91,8 @@
                                     <td>{{i.Other}}</td>
                                     <td>{{i.CostCode}}</td>
                                     <td>{{i.CCName}}</td>
-                                    <td>{{i.CodeNo}}</td>
                                     <td>{{i.EstimateRecd}}</td>
-                                    <td><a class="btn btn-success mr-3" href="EditCallEntry/{{i.id}}"><i class="bi bi-pen"></i></a><a href="DeleteCallEntry/{{i.id}}" style="margin-left: 5px;" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
+                                    <td><a class="btn btn-success mr-3" href="EditCallEntery/{{i.id}}"><i class="bi bi-pen"></i></a><a href="DeleteCallEntery/{{i.id}}" style="margin-left: 5px;" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

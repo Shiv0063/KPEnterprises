@@ -92,7 +92,7 @@ def RCCODE(request):
     if request.method == 'POST':
         RC = request.POST.get('RC')
         RCL = RateModel.objects.get(CodeNo=RC)
-        return JsonResponse({'RC':RCL.Rate})
+        return JsonResponse({'RC':RCL.Rate,'RCDescription':RCL.Description})
 
 @csrf_exempt
 def CCName(request):
@@ -162,7 +162,7 @@ def AddCallEntry(request):
         data.save()
         CM.Counter = int(count)+1
         CM.save()
-        return redirect('/CallEntry')
+        return redirect('/CallEntery')
     return render(request,'addcallentry.html',maindata)
 
 @login_required(login_url='Login')
@@ -171,7 +171,7 @@ def DeleteCallEntry(request,id):
     RC = RCModel.objects.filter(Counter= dt.Counter)
     dt.delete()
     RC.delete()
-    return redirect('/CallEntry')
+    return redirect('/CallEntery')
 
 def EditCallEntry(request,pk):
     data=EntryModel.objects.get(id=pk)
@@ -231,7 +231,7 @@ def EditCallEntry(request,pk):
         data.Remark = request.POST.get('Remark')
         data.TotalAmount = request.POST.get('TotalAmount')
         data.save()
-        return redirect('/CallEntry')
+        return redirect('/CallEntery')
     return render(request,'editcallentry.html',{'data':data,'RCM':RCM,'PN':PN,'City':City,'Branch':Branch,'Cluster':Cluster,'RC':RC,'CC':CC,'TAmount':TAmount})
 
 @csrf_exempt
@@ -242,8 +242,11 @@ def Citys(request):
     City = list(PN)
     return JsonResponse({'City':City})
 
-def Branch(request,City):
-    Branch = PartyModel.objects.filter(City=City)
+@csrf_exempt
+def Branch(request):
+    PN = request.POST.get('value')
+    City = request.POST.get('City')
+    Branch = PartyModel.objects.filter(City=City,PartyName=PN)
     PN={i.Branch for i in Branch}
     Branch = list(PN)
     return JsonResponse({'Branch':Branch})
@@ -298,7 +301,7 @@ def EntryClase(request):
     CM=CountModel.objects.get(id=1)
     RCM=RCModel.objects.filter(Counter=CM.Counter)
     RCM.delete()
-    return redirect('/CallEntry')
+    return redirect('/CallEntery')
 
 @login_required(login_url='Login')
 def PendingCall(request):
@@ -843,11 +846,36 @@ def CodeNoC(request):
         return JsonResponse({'RC':RC})
     
 @csrf_exempt
+def ChallanNoC(request):
+    if request.method == 'POST':
+        CN = request.POST.get('CN')
+        RCL = EntryModel.objects.filter(ChallanNo=CN).exists()
+        if RCL == True:
+            RC = 1
+        else:
+            RC = 0
+        return JsonResponse({'RC':RC})
+
+@csrf_exempt
+def CodeNoC(request):
+    if request.method == 'POST':
+        CN = request.POST.get('CN')
+        RCL = RateModel.objects.filter(CodeNo=CN).exists()
+        if RCL == True:
+            RC = 1
+        else:
+            RC = 0
+        return JsonResponse({'RC':RC})
+
+@csrf_exempt
 def PartyData(request):
     if request.method == 'POST':
         Party = request.POST.get('Party')
+        print(Party)
         City = request.POST.get('City')
+        print(City)
         Branch = request.POST.get('Branch')
+        print(Branch)
         Branch2= Branch.replace("%20", " ")
         RC = PartyModel.objects.get(PartyName=Party,City=City,Branch=Branch2)
         CodeNo=RC.Code
@@ -1026,7 +1054,8 @@ def export_to_excel(request,id):
     ws.merge_cells('A2:T2')
     ws['A2'] = f'Bill Month :- {dt.BillMonth} {dt.BillYear}'
     ws.merge_cells('A3:T3')
-    ws['A3'] = f'Bill No : GA20242{int(dt.InvoiceNo)+5000} Dated : {dt.InvoiceData.strftime('%d-%m-%Y')}'
+    # ws['A3'] = f'Bill No : GA20242{int(dt.InvoiceNo)+5000} Dated : {dt.InvoiceData.strftime('%d-%m-%Y')}'
+    ws['A3'] = f'Bill No : GA20242{int(dt.InvoiceNo)+5000} Dated :'+ dt.InvoiceData.strftime('%d-%m-%Y')
     # Add headers
     headers = ['Sr.No.',"Description of Goods","Work start- date","Work end-date","Challan No.","Challan date","call log.no.","call log. Date","RC Code","HSN no.","Location Code","UOM",'Qty.','Rate','Amount',"SGST Rate","SGST Amount",'CGST Rate','CGST Amount','Total Amount payable']
     ws.append(headers)
@@ -1038,7 +1067,7 @@ def export_to_excel(request,id):
     num=1
     for i in products:
         en = EntryModel.objects.get(Counter=i.Counter)
-        ws.append([num,i.RCDescription,en.Date.strftime('%d-%m-%Y'),en.CloseDate.strftime('%d-%m-%Y'),en.ChallanNo,en.ChallanDate.strftime('%d-%m-%Y'),en.CodeNo,en.Date.strftime('%d-%m-%Y'),i.RCCode,i.HSNCode,num+1000,i.Unit,i.Quantity,i.Rate,i.Amount,i.GSTRate + " %",i.GSTAmount,i.GSTRate + " %",i.GSTAmount,i.TotalAmount])
+        ws.append([num,i.RCDescription,en.Date.strftime('%d-%m-%Y'),en.CloseDate.strftime('%d-%m-%Y'),en.ChallanNo,en.ChallanDate.strftime('%d-%m-%Y'),en.CodeNo,en.Date.strftime('%d-%m-%Y'),i.RCCode,i.HSNCode,en.Code,i.Unit,i.Quantity,i.Rate,i.Amount,i.GSTRate + " %",i.GSTAmount,i.GSTRate + " %",i.GSTAmount,i.TotalAmount])
         num+=1
 
     Amount = 0
@@ -1120,7 +1149,7 @@ def SoftCopy(request,id):
     print(my)
     for i in products:
         en = EntryModel.objects.get(Counter=i.Counter)
-        ws.append(['278949','Giri Associates','MSME',f'GA20242{int(dt.InvoiceNo)+5000}',dt.InvoiceData.strftime('%d-%m-%Y'),'R & M',my,'ADM0077763','957','Mahuva-Mahuva',en.CostCode,en.CCName,i.Amount,i.GSTRate + " %",i.GSTAmount,i.GSTRate + " %",i.GSTAmount,i.TotalAmount])
+        ws.append(['278949','Giri Associates','MSME',f'GA20242{int(dt.InvoiceNo)+5000}',dt.InvoiceData.strftime('%d-%m-%Y'),'R & M',my,'ADM0077763',en.Code,en.Branch,en.CostCode,en.CCName,i.Amount,i.GSTRate + " %",i.GSTAmount,i.GSTRate + " %",i.GSTAmount,i.TotalAmount])
         num+=1
 
     Amount = 0

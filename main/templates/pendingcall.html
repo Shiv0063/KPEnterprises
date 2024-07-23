@@ -16,7 +16,7 @@
             </div>
             <div class="col-md-7 col-3 text-md-end">
                 <div class="d-flex justify-content-md-end align-items-center">
-                    <a href="/AddCallEntry" class="btn btn-outline-success mb-2 me-2">Add Call Entry</a>
+                    <a href="/AddCallEntery" class="btn btn-outline-success mb-2 me-2">Add Call Entery</a>
                 </div>
             </div>
             <div class="col-12">
@@ -44,6 +44,7 @@
                                     <th>City</th>
                                     <th>Branch</th>
                                     <th>Call Type</th>
+                                    <th>Call No</th>
                                     <th>Call Date</th>
                                     <th>Call Close Date</th>
                                     <th>Cluster</th>
@@ -59,7 +60,6 @@
                                     <th>Work Engaged</th>
                                     <th>Cost Code</th>
                                     <th>Cost Code Name</th>
-                                    <th>Call No</th>
                                     <th>Estimate Recd.</th>
                                     <th>Action</th>
                                 </tr>
@@ -73,6 +73,7 @@
                                     <td>{{i.City}}</td>
                                     <td>{{i.Branch}}</td>
                                     <td>{{i.CallType}}</td>
+                                    <td>{{i.CodeNo}}</td>
                                     <td>{{i.NDate}}</td>
                                     <td>{{i.NCloseDate}}</td>
                                     <td>{{i.Cluster}}</td>
@@ -88,9 +89,8 @@
                                     <td>{{i.WorkEngaged}}</td>
                                     <td>{{i.CostCode}}</td>
                                     <td>{{i.CCName}}</td>
-                                    <td>{{i.CodeNo}}</td>
                                     <td>{{i.EstimateRecd}}</td>
-                                    <td><a href="DeleteCallEntry/{{i.id}}" style="margin-left: 5px;" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
+                                    <td><a href="DeleteCallEntery/{{i.id}}" style="margin-left: 5px;" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
