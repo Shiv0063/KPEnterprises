@@ -75,12 +75,12 @@ WSGI_APPLICATION = 'ERP.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         "NAME": os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        "NAME": os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -94,19 +94,19 @@ WSGI_APPLICATION = 'ERP.wsgi.application'
 # }
 
 # Render postgresSQL database
-import dj_database_url
+# import dj_database_url
 
-RENDER_EXTERNAL_HOSTNAME = "postgresql://kpenterprises_np1f_user:6u1PA0sFw8Qf8dtbupwOXgpPclwAVFmy@dpg-cqcd75uehbks738dhei0-a.oregon-postgres.render.com/kpenterprises_np1f"
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# RENDER_EXTERNAL_HOSTNAME = "postgresql://kpenterprises_np1f_user:6u1PA0sFw8Qf8dtbupwOXgpPclwAVFmy@dpg-cqcd75uehbks738dhei0-a.oregon-postgres.render.com/kpenterprises_np1f"
+# if RENDER_EXTERNAL_HOSTNAME:
+#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-DATABASES = {
-    'default': dj_database_url.config(
-        # Feel free to alter this value to suit your needs.
-        default='postgresql://kpenterprises_np1f_user:6u1PA0sFw8Qf8dtbupwOXgpPclwAVFmy@dpg-cqcd75uehbks738dhei0-a.oregon-postgres.render.com/kpenterprises_np1f',
-        conn_max_age=600
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Feel free to alter this value to suit your needs.
+#         default='postgresql://kpenterprises_np1f_user:6u1PA0sFw8Qf8dtbupwOXgpPclwAVFmy@dpg-cqcd75uehbks738dhei0-a.oregon-postgres.render.com/kpenterprises_np1f',
+#         conn_max_age=600
+#     )
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -139,8 +139,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT = os.path.join(BASE_DIR, 'main/static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'main/static')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'main/static')]
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 

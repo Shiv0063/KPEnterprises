@@ -2,13 +2,19 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required,user_passes_test
 # Create your views here.
-from main.models import CostCodeModel,ClusterModel,GSTModel,LabourModel,PartyModel,RateModel,CountModel,RCModel,EntryModel,InvoiceRCModel,InvoiceModel,ICountModel,QCountModel,QTTModel,PartyNameModel,QuotationModel
+from main.models import CostCodeModel,ClusterModel,GSTModel,LabourModel,PartyModel,RateModel,CountModel,RCModel,EntryModel,InvoiceRCModel,InvoiceModel,ICountModel,QCountModel,QTTModel,PartyNameModel,QuotationModel,ProfileModel
 from django.http import HttpResponse,JsonResponse
+from django.contrib.auth.models import User,Group
 from django.views.decorators.csrf import csrf_exempt
 
 def Login(request):
     if request.method=="POST":
-        username=request.POST.get('Username')
+        email=request.POST.get('email')
+        try:
+            dt=User.objects.get(email=email)
+        except User.DoesNotExist:
+            return redirect('/')
+        username=dt.username
         password=request.POST.get('Password')
         user=authenticate(request,username=username,password=password)
         if user is not None:
@@ -614,6 +620,8 @@ def AddInvoiceMaIN(request):
                     TotalAmount = GA + eval(TotalA)
                     TotalAmount = "%.2f" % TotalAmount
                     i.complet = '1'
+                    i.IN=InvoiceNo
+                    print(InvoiceNo)
                     i.save()
                 MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,FromDate=FromDate,ToDate=ToDate,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount)
                 MainInvoice.save()
@@ -815,8 +823,12 @@ def ClaseQuotation(request,id):
 @login_required(login_url='Login')
 def TaxInvoice(request,id):
     dt=InvoiceModel.objects.get(id=id)
-    party = PartyModel.objects.all()
+    pd=ProfileModel.objects.get(id=1)
+    party = PartyModel.objects.filter(PartyName=dt.PartyName)
+    for i in party:
+        py=PartyModel.objects.get(id=i.id)
     Rc = InvoiceRCModel.objects.filter(InvoiceNo=dt.InvoiceNo)
+    InvoiceNo=f'GA20242{int(dt.InvoiceNo)+5000}'
     Amount = 0
     GSTAmount = 0
     TotalAmount = 0
@@ -831,7 +843,7 @@ def TaxInvoice(request,id):
     for i in party:
         p['PartyName'] = i.PartyName
         break
-    main={'dt':dt,'party':party,'p':p,'Rc':Rc,'Amount':Amount,'GSTAmount':GSTAmount,'TotalAmount':TotalAmount}
+    main={'dt':dt,'party':party,'p':p,'Rc':Rc,'pd':pd,'py':py,'Amount':Amount,'InvoiceNo':InvoiceNo,'GSTAmount':GSTAmount,'TotalAmount':TotalAmount}
     return render(request,'taxinvoice.html',main)
 
 @csrf_exempt
@@ -1192,3 +1204,56 @@ def QuotationP(request,id):
         break
     main={'dt':dt,'party':party,'p':p,'Rc':Rc,'RCAmount':RCAmount,'NAmount':NAmount,'Amount':Amount}
     return render(request,'quotationp.html',main)
+
+@login_required(login_url='Login')
+def InvoiceDelete(request,id):
+    dt=InvoiceModel.objects.get(id=id)
+    InvoiceRCModel.objects.filter(InvoiceNo=dt.InvoiceNo).delete()
+    i = EntryModel.objects.filter(IN=dt.InvoiceNo)
+    for j in i:
+        j.complet = '0'
+        j.save()
+    InvoiceModel.objects.get(id=id).delete()
+    return redirect('/Invoice')
+
+# @login_required(login_url='Login')
+# def Profile(request):
+#     dt=ProfileModel.objects.all()
+#     if request.method=="POST":    
+#         Username=request.POST.get('Username')
+#         CompanyName=request.POST.get('CompanyName')
+#         PhoneNo = request.POST.get('PhoneNo')
+#         GSTNo = request.POST.get('GSTNo')
+#         PanNo = request.POST.get('PanNo')
+#         Email = request.POST.get('Email')
+#         Address = request.POST.get('Address')
+#         dt=ProfileModel(UserName=Username,CompanyName=CompanyName,PhoneNo=PhoneNo,GSTNo=GSTNo,PanNo=PanNo,Email=Email,Address=Address)
+#         dt.save()
+#     return render(request,'profile.html')
+
+@login_required(login_url='Login')
+def Profile(request):
+    dt=ProfileModel.objects.get(id=1)
+    uf=User.objects.get(username=request.user)
+    if request.method=="POST":    
+        UserName=request.POST.get('Username')
+        dt.UserName=UserName
+        dt.CompanyName=request.POST.get('CompanyName')
+        dt.PhoneNo = request.POST.get('PhoneNo')
+        dt.GSTNo = request.POST.get('GSTNo')
+        dt.PanNo = request.POST.get('PanNo')
+        dt.Email = request.POST.get('Email')
+        uf.email= request.POST.get('Email')
+        dt.Address = request.POST.get('Address')
+        dt.save()
+        uf.save()
+    return render(request,'profile.html',{'dt':dt})
+
+@login_required(login_url='Login')
+def PWChange(request):
+    uf=User.objects.get(username=request.user)
+    if request.method=="POST":    
+        NewPassword=request.POST.get('NewPassword')
+        uf.set_password(NewPassword)
+        uf.save()
+        return redirect('/logout')

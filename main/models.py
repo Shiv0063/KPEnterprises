@@ -116,6 +116,8 @@ class EntryModel(models.Model):
     Remark = models.TextField()
     TotalAmount = models.CharField(max_length=100,null=True, blank=True) 
     complet = models.CharField(max_length=100,default='0',null=True, blank=True)
+    IN = models.CharField(max_length=100,default='0', blank=True)
+
 
     def NDate(self):
         return str(self.Date.strftime('%d-%m-%Y'))
@@ -221,3 +223,12 @@ class QuotationModel(models.Model):
     
     def ndate(self):
         return self.Date.strftime('%d-%m-%Y')
+    
+class ProfileModel(models.Model):
+    UserName = models.CharField(max_length=100, null=True, blank=True)
+    CompanyName = models.CharField(max_length=100, null=True, blank=True)
+    PhoneNo = models.CharField(max_length=100, null=True, blank=True)
+    GSTNo = models.CharField(max_length=100, null=True, blank=True)
+    PanNo = models.CharField(max_length=100, null=True, blank=True)
+    Email = models.CharField(max_length=100, null=True, blank=True)
+    Address = models.TextField(null=True, blank=True)

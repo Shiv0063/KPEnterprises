@@ -6,18 +6,18 @@
     <div class="position-relative container-fluid px-0">
         <div class="row align-items-center position-relative">
             <div class="col-md-5 col-9 mb-1 mb-lg-0">
-                <h3 class="mb-2">Edit Rate</h3>
+                <h3 class="mb-2">Edit RC Code</h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item">Rate</li>
-                        <li class="breadcrumb-item active">Edit Rate</li>
+                        <li class="breadcrumb-item">RC Code</li>
+                        <li class="breadcrumb-item active">Edit RC Code</li>
                     </ol>
                 </nav>
             </div>
             <div class="col-md-7 col-3 text-md-end">
                 <div class="d-flex justify-content-md-end align-items-center">
-                    <a href="/Rate" class="btn btn-outline-success mb-2 me-2">Back</a>
+                    <a href="/RCCode" class="btn btn-outline-success mb-2 me-2">Back</a>
                 </div>
             </div>
             <div class="col-12">
@@ -38,13 +38,13 @@
             <div class="col-md-9 col-12 mb-1">
                 <div class="card h-100">
                     <div class="card-header">
-                        <h5 class="mb-1">Edit Rate</h5>
+                        <h5 class="mb-1">Edit RC Code</h5>
                     </div>
                     <div class="card-body">
                         <form class="row g-3" method="post">
                             {% csrf_token %}
                             <div class="col-md-12">
-                                <label for="" class="form-label"><b>Code No</b></label>
+                                <label for="" class="form-label"><b>RC Code No</b></label>
                                 <input type="text" class="form-control" name="CodeNo" value="{{data.CodeNo}}" required>
                             </div>
                             <div class="col-md-12">
@@ -61,7 +61,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="" class="form-label"><b>Rate</b></label>
-                                <input type="number" class="form-control" name="Rate" value="{{data.Rate}}" required>
+                                <input type="text" class="form-control" name="Rate" value="{{data.Rate}}" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="" class="form-label"><b>Remarks</b></label>

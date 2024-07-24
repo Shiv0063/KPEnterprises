@@ -61,7 +61,7 @@
                                 <select id="inputState" class="form-select" name="Cluster" required>
                                     <option selected>Choose...</option>
                                     {% for i in data %}
-                                    <option value="{{i.id}}">{{i.Name}}-{{i.Amount}}--{{i.Type}}</option>
+                                    <option value="{{i.id}}">{{i.Name}}-{{i.Type}}--{{i.Amount}}</option>
                                     {% endfor %}
                                 </select>
                             </div>

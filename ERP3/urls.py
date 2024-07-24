@@ -1,23 +1,23 @@
 from django.contrib import admin
 from django.urls import path
-from main import views
+from main3 import views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home,name="home"),
-    path('CallEntery',views.CallEntry,name="Call Entry"),
-    path('DeleteCallEntery/<int:id>',views.DeleteCallEntry,name="Call Entry Delete"),
+    path('CallEntry',views.CallEntry,name="Call Entry"),
+    path('DeleteCallEntry/<int:id>',views.DeleteCallEntry,name="Call Entry Delete"),
     path('PartyName/<str:PN>',views.PartyName,name="Party Name"),
     path('Citys',views.Citys,name="Citys"),
-    path('Branch',views.Branch,name="Branch"),
-    path('EnteryClase',views.EntryClase,name="Call Entry Clase"),
+    path('Branch/<str:City>',views.Branch,name="Branch"),
+    path('EntryClase',views.EntryClase,name="Call Entry Clase"),
     path('RCCreat',views.RCCreat,name="RC Creat"),
     path('RCEdit',views.RCEdit,name="RC Edit"),
     path('RCDelete',views.RCDelete,name="RC Delete"),
-    path('AddCallEntery',views.AddCallEntry,name="Add Call Entry"),
-    path('EditCallEntery/<int:pk>',views.EditCallEntry,name="Edit Call Entry"),
+    path('AddCallEntry',views.AddCallEntry,name="Add Call Entry"),
+    path('EditCallEntry/<int:pk>',views.EditCallEntry,name="Edit Call Entry"),
     path('PendingCall',views.PendingCall,name="Pending Call"),
     path('PendingWorkOrder',views.PendingWorkOrder,name="Pending WorkOrder"),
     path('Cluster',views.Cluster,name="Cluster"),
@@ -51,8 +51,6 @@ urlpatterns = [
     path('CompleteCall',views.CompleteCall,name="Complete Call"),
     path('Quotation',views.QuotationEntry,name="Quotation Entry"),
     path('DeleteQuotation/<int:id>',views.DeleteQuotation,name="Quotation delete"),
-    path('EditQuotation/<int:id>',views.EditQuotation,name="Quotation Edit"),
-    path('QuotationP/<int:id>',views.QuotationP,name="Quotation Print"),
     path('AddQuotation',views.AddQuotation,name="Add Quotation"),
     path('QRCCreat',views.QRCCreat,name="QRC Creat"),
     path('QRCEdit',views.QRCEdit,name="QRC Edit"),
@@ -63,15 +61,9 @@ urlpatterns = [
     path('TaxInvoice/<int:id>',views.TaxInvoice,name="Tax Invoice"),
     path('ETOE/<int:id>',views.export_to_excel,name="Export To Excel_A"),
     path('HSN/<int:id>',views.HSN,name="Export To Excel_HSN"),
-    path('SoftCopy/<int:id>',views.SoftCopy,name="Export To SoftCopy"),
     path('CCName',views.CCName,name='CCName'),
     path('ClusterReport',views.Annexure,name='ClusterReport'),
     path('ClusterEL',views.ClusterEL,name='ClusterEL'),
-    path('ChallanNoC',views.ChallanNoC,name='ChallanNoC'),
-    path('CodeNoC',views.CodeNoC,name='CodeNoC'),
-    path('Profile',views.Profile,name='Profile'),
-    path('PWChange',views.PWChange,name='PWChange'),
-    path('InvoiceDelete/<int:id>',views.InvoiceDelete,name='InvoiceDelete'),
     path('login',views.Login,name='Login'),
     path('logout',views.Logout,name='Logout'),
 
