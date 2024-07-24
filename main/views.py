@@ -1231,7 +1231,7 @@ def InvoiceDelete(request,id):
 #         dt.save()
 #     return render(request,'profile.html')
 
-@login_required(login_url='Login')
+# @login_required(login_url='Login')
 def Profile(request):
     dt=ProfileModel.objects.get(id=1)
     uf=User.objects.get(username=request.user)
