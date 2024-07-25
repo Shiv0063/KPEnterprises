@@ -71,6 +71,7 @@ class RateModel(models.Model):
 
 class CountModel(models.Model):
     Counter = models.IntegerField(default=0)
+    idf = models.CharField(max_length=100,null=True, blank=True)
 
 class RCModel(models.Model):
     Counter = models.IntegerField(default=0,null=True, blank=True)
@@ -149,12 +150,15 @@ class EntryModel(models.Model):
 
 class ICountModel(models.Model):
     InvoiceNo = models.IntegerField(default=0)
+    Ron = models.CharField(max_length=100,null=True, blank=True)
 
 class InvoiceModel(models.Model):
     InvoiceData = models.DateField(null=True, blank=True)
     InvoiceNo = models.CharField(max_length=100,null=True, blank=True)
     BillMonth = models.CharField(max_length=100,null=True, blank=True)
     PartyName = models.CharField(max_length=100,null=True, blank=True)
+    Cluster = models.CharField(max_length=100, null=True, blank=True)
+    Cluster_id = models.CharField(max_length=100, null=True, blank=True)
     BillYear = models.CharField(max_length=100,null=True, blank=True)
     Tax = models.CharField(max_length=100,null=True, blank=True)
     datein = models.CharField(max_length=100,null=True, blank=True)

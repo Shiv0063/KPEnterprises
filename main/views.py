@@ -31,6 +31,20 @@ def home(request):
     PC = EntryModel.objects.filter(CallType='Call',complet='0').count()
     PW = EntryModel.objects.filter(CallType='WorkOrder',complet='0').count()
     CC = EntryModel.objects.filter(complet='1').count()
+    # ICountModel.objects.all().delete()
+    # InvoiceModel.objects.all().delete()
+    # InvoiceRCModel.objects.all().delete()
+    # RCModel.objects.all().delete()
+    # EntryModel.objects.all().delete()
+    # CountModel.objects.all().delete()
+    dt = EntryModel.objects.filter(complet='1')
+    # for i in dt:
+    #     print(i.IN)
+    #     i.complet='0'
+    #     i.save()
+    # ICountModel.objects.all().delete()
+    # for i in CM:
+    #     print(i.id,i.InvoiceNo)
     Invoice = InvoiceModel.objects.all().count()
     data={'PC':PC,'PW':PW,'CC':CC,'Invoice':Invoice}
     return render(request,'dashboard.html',data)
@@ -110,10 +124,10 @@ def CCName(request):
 @login_required(login_url='Login')
 def AddCallEntry(request):
     try:
-        CM=CountModel.objects.get(id=1)
+        CM=CountModel.objects.get(idf='1')
         count = CM.Counter
     except CountModel.DoesNotExist:
-        CM=CountModel.objects.create(Counter=1)
+        CM=CountModel.objects.create(Counter=1,idf='1')
         count = 1
     Party=PartyModel.objects.all()
     PN={i.PartyName for i in Party}
@@ -166,6 +180,8 @@ def AddCallEntry(request):
         else:
             data = EntryModel(Counter=Counter,PartyName=PartyName,City=City,Branch=Branch,Code=Code,Cluster=Cluster,Cluster_id=Cluster_id,Address=Address,NO1=NO1,NO2=NO2,NO3=NO3,NO4=NO4,CallType=CallType,Date=Date,CloseDate=CloseDate,CodeNo=CodeNo,CostCode=CostCode,ContactNo=ContactNo,ContactPerson=ContactPerson,Email=Email,CCName=CCName,Problem=Problem,ChallanNo=ChallanNo,ChallanDate=ChallanDate,CallAllocatedTo=CallAllocatedTo,EstimateRecd=EstimateRecd,WorkEngaged=WorkEngaged,Other=Other,Remark=Remark,TotalAmount=TotalAmount)
         data.save()
+        CM=CountModel.objects.get(idf='1')
+        count = CM.Counter
         CM.Counter = int(count)+1
         CM.save()
         return redirect('/CallEntery')
@@ -304,7 +320,7 @@ def RCDelete(request):
         return JsonResponse({'status':0})
 
 def EntryClase(request):
-    CM=CountModel.objects.get(id=1)
+    CM=CountModel.objects.get(idf='1')
     RCM=RCModel.objects.filter(Counter=CM.Counter)
     RCM.delete()
     return redirect('/CallEntery')
@@ -545,34 +561,40 @@ def Invoice(request):
 @login_required(login_url='Login')
 def AddInvoice(request):
     try:
-        CM=ICountModel.objects.get(id=1)
+        CM=ICountModel.objects.get(Ron='1')
         InvoiceNo = CM.InvoiceNo
     except ICountModel.DoesNotExist:
-        CM=ICountModel.objects.create(InvoiceNo=1)
+        CM=ICountModel.objects.create(InvoiceNo=1,Ron='1')
         InvoiceNo = 1
     PN=PartyModel.objects.all()
     PN={i.PartyName for i in PN} 
-    maindata={"PN":PN,'InvoiceNo':InvoiceNo}
+    Cluster = ClusterModel.objects.all()
+    maindata={"PN":PN,'InvoiceNo':InvoiceNo,'Cluster':Cluster}
     if request.method=="POST":    
         PartyName=request.POST.get('PartyName')
+        C_id=request.POST.get('Cluster')
+        if C_id ==  '--Select--':
+            return redirect('/AddInvoice')
         datein=request.POST.get('datein')
         Type=request.POST.get('Type')
         if datein == 'Date':
             FromDate=request.POST.get('FromDate')
             ToDate=request.POST.get('ToDate')
-            show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,Date__range=[FromDate, ToDate],complet='0')
+            show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,Date__range=[FromDate, ToDate],complet='0',Cluster_id=C_id)
             ttl = 0
             for i in show:
                 ttl += eval(i.TotalAmount)
             ttl = "%.2f" % ttl
-            maindata={"PN":PN,'InvoiceNo':InvoiceNo,'show':show,'PartyName':PartyName,'Type':Type,'datein':datein,'FromDate':FromDate,'ToDate':ToDate,'ttl':ttl}
+            C_id=int(C_id)
+            maindata={"PN":PN,'InvoiceNo':InvoiceNo,'show':show,'PartyName':PartyName,'Type':Type,'datein':datein,'FromDate':FromDate,'ToDate':ToDate,'ttl':ttl,'C_id':C_id,'Cluster':Cluster}
         else:
-            show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,complet='0')
+            show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,complet='0',Cluster_id=C_id)
             ttl = 0
             for i in show:
                 ttl += eval(i.TotalAmount)
             ttl = "%.2f" % ttl
-            maindata={"PN":PN,'InvoiceNo':InvoiceNo,'show':show,'PartyName':PartyName,'Type':Type,'datein':datein,'ttl':ttl}
+            C_id=int(C_id)
+            maindata={"PN":PN,'InvoiceNo':InvoiceNo,'show':show,'PartyName':PartyName,'Type':Type,'datein':datein,'ttl':ttl,'C_id':C_id,'Cluster':Cluster}
     return render(request,'addinvoice.html',maindata)
 
 def PartyName(request,PN):
@@ -590,8 +612,13 @@ def AddInvoiceMaIN(request):
         Tax=request.POST.get('Tax')
         TotalA=request.POST.get('TotalAmount')
         PartyName=request.POST.get('PartyName')
+        C_id=request.POST.get('Cluster')
         datein=request.POST.get('datein')
         Type=request.POST.get('Type')
+        Cr = ClusterModel.objects.get(id=int(C_id))
+        Cluster=Cr.Name
+        print(C_id)
+        print(Cluster)
         if TotalA:
             TA = eval(TotalA)
         else:
@@ -600,7 +627,7 @@ def AddInvoiceMaIN(request):
             if datein == 'Date':
                 FromDate=request.POST.get('FromDate')
                 ToDate=request.POST.get('ToDate')
-                show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,Date__range=[FromDate, ToDate],complet='0')
+                show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,Date__range=[FromDate, ToDate],complet='0',Cluster_id=C_id)
                 for i in show:
                     dt = RCModel.objects.filter(Counter=i.Counter)
                     GA=0
@@ -623,14 +650,18 @@ def AddInvoiceMaIN(request):
                     i.IN=InvoiceNo
                     print(InvoiceNo)
                     i.save()
-                MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,FromDate=FromDate,ToDate=ToDate,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount)
+                MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,FromDate=FromDate,ToDate=ToDate,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount,Cluster_id=C_id,Cluster=Cluster)
                 MainInvoice.save()
-                CM = ICountModel.objects.get(id=1)
+                try:
+                    CM=ICountModel.objects.last()
+                except ICountModel.DoesNotExist:
+                    CM=ICountModel.objects.create(InvoiceNo=1,Ron='1')
+                    CM = ICountModel.objects.last()
                 CM.InvoiceNo = int(InvoiceNo)+1
                 CM.save()
                 return redirect("/AddInvoice")
             else:
-                show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,complet='0')
+                show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,complet='0',Cluster_id=C_id)
                 for i in show:
                     dt = RCModel.objects.filter(Counter=i.Counter)
                     GA=0
@@ -650,10 +681,12 @@ def AddInvoiceMaIN(request):
                     TotalAmount = GA + eval(TotalA)
                     TotalAmount = "%.2f" % TotalAmount
                     i.complet = '1'
+                    i.IN=InvoiceNo
+                    print(InvoiceNo)
                     i.save()
-                MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount)
+                MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount,Cluster_id=C_id,Cluster=Cluster)
                 MainInvoice.save()
-                CM = ICountModel.objects.get(id=1)
+                CM = ICountModel.objects.get(Ron='1')
                 CM.InvoiceNo = int(InvoiceNo)+1
                 CM.save()
                 return redirect("/AddInvoice")
@@ -1209,8 +1242,8 @@ def QuotationP(request,id):
 def InvoiceDelete(request,id):
     dt=InvoiceModel.objects.get(id=id)
     InvoiceRCModel.objects.filter(InvoiceNo=dt.InvoiceNo).delete()
-    i = EntryModel.objects.filter(IN=dt.InvoiceNo)
-    for j in i:
+    imain = EntryModel.objects.filter(IN=dt.InvoiceNo)
+    for j in imain:
         j.complet = '0'
         j.save()
     InvoiceModel.objects.get(id=id).delete()

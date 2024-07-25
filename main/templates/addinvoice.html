@@ -61,10 +61,19 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="" class="form-label"><b>Party Name</b></label>
-                                <select id="" class="form-select" name="PartyName">
+                                <select id="" class="form-select" name="PartyName" required>
                                     <option selected>--Select--</option>
                                     {% for i in PN %}
                                     <option value="{{i}}" {% if i == PartyName %} selected {% endif %}>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label"><b>Cluster</b></label>
+                                <select id="" class="form-select" name="Cluster" required>
+                                    <option selected>--Select--</option>
+                                    {% for i in Cluster %}
+                                    <option value="{{i.id}}" {% if i.id == C_id %} selected {% endif %}>{{i.Name}}--{{i.Type}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -127,7 +136,7 @@
                                                 <tr>
                                                     <th>Call Date</th>
                                                     <th>Call Close Date</th>
-                                                    <th>Cluster</th>
+                                                    <!-- <th>Cluster</th> -->
                                                     <th>Challan No</th>
                                                     <th>Challan Date</th>
                                                     <th>Call Allocated</th>
@@ -149,7 +158,7 @@
                                                 <tr>
                                                     <td>{{i.NDate}}</td>
                                                     <td>{{i.NCloseDate}}</td>
-                                                    <td>{{i.Cluster}}</td>
+                                                    <!-- <td>{{i.Cluster}}</td> -->
                                                     <td>{{i.ChallanNo}}</td>
                                                     <td>{{i.NChallanDate}}</td>
                                                     <td>{{i.CallAllocatedTo}}</td>
