@@ -132,15 +132,15 @@
                   </ul>
                 </li>
                 <li class="nav-item">
-                  <a href="#Entery" data-bs-toggle="collapse" data-tabname="Entery" class="nav-link d-flex align-items-center text-truncate"
+                  <a href="#Entry" data-bs-toggle="collapse" data-tabname="Entry" class="nav-link d-flex align-items-center text-truncate"
                     aria-expanded="false">
                     <span class="sidebar-icon">
                       <i class="bi bi-dropbox fs-5"></i>
                     </span>
-                    <span class="sidebar-text">Entery</span>
+                    <span class="sidebar-text">Entry</span>
                   </a>
-                  <ul data-bs-target="#Enetry" id="Entery" class="sidebar-dropdown list-unstyled collapse">
-                    <li class="sidebar-item"><a class="sidebar-link" data-tabname="CallEntery" href="/CallEntery">Call Entery</a></li>
+                  <ul data-bs-target="#Enetry" id="Entry" class="sidebar-dropdown list-unstyled collapse">
+                    <li class="sidebar-item"><a class="sidebar-link" data-tabname="CallEntry" href="/CallEntry">Call Entry</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" data-tabname="PendingCall" href="/PendingCall">Pending Call</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" data-tabname="PendingWorkOrder" href="/PendingWorkOrder">Pending WorkOrder</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" data-tabname="CompleteCall" href="/CompleteCall">Complete Call</a></li>
@@ -346,14 +346,14 @@
 
     let PathNameObj = {
       "": 'Dashboard',
-      "CallEntery": 'Entery',
-      "AddCallEntery": 'Entery',
-      "PendingCall": 'Entery',
-      "PendingWorkOrder": 'Entery',
-      "CompleteCall": 'Entery',
-      "Quotation": 'Entery',
-      "Invoice": 'Entery',
-      "AddInvoice": 'Entery',
+      "CallEntry": 'Entry',
+      "AddCallEntry": 'Entry',
+      "PendingCall": 'Entry',
+      "PendingWorkOrder": 'Entry',
+      "CompleteCall": 'Entry',
+      "Quotation": 'Entry',
+      "Invoice": 'Entry',
+      "AddInvoice": 'Entry',
       "Party": 'Master',
       "AddParty": 'Master',
       "EditParty": 'Master',
@@ -385,10 +385,10 @@
     document.querySelector(`[data-tabname='${patName}']`)?.classList.add("active")
 
     let PathNameObj2 = {
-      "CallEntery": 'CallEntery',
+      "CallEntry": 'CallEntry',
       "PendingCall": 'PendingCall',
       "PendingWorkOrder": 'PendingWorkOrder',
-      "AddCallEntery": 'CallEntery',
+      "AddCallEntry": 'CallEntry',
       "Invoice": 'Invoice',
       "AddInvoice": 'Invoice',
       "Party": 'Party',

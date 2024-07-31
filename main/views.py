@@ -184,7 +184,7 @@ def AddCallEntry(request):
         count = CM.Counter
         CM.Counter = int(count)+1
         CM.save()
-        return redirect('/CallEntery')
+        return redirect('/CallEntry')
     return render(request,'addcallentry.html',maindata)
 
 @login_required(login_url='Login')
@@ -193,7 +193,7 @@ def DeleteCallEntry(request,id):
     RC = RCModel.objects.filter(Counter= dt.Counter)
     dt.delete()
     RC.delete()
-    return redirect('/CallEntery')
+    return redirect('/CallEntry')
 
 def EditCallEntry(request,pk):
     data=EntryModel.objects.get(id=pk)
@@ -253,7 +253,7 @@ def EditCallEntry(request,pk):
         data.Remark = request.POST.get('Remark')
         data.TotalAmount = request.POST.get('TotalAmount')
         data.save()
-        return redirect('/CallEntery')
+        return redirect('/CallEntry')
     return render(request,'editcallentry.html',{'data':data,'RCM':RCM,'PN':PN,'City':City,'Branch':Branch,'Cluster':Cluster,'RC':RC,'CC':CC,'TAmount':TAmount})
 
 @csrf_exempt
@@ -323,7 +323,7 @@ def EntryClase(request):
     CM=CountModel.objects.get(idf='1')
     RCM=RCModel.objects.filter(Counter=CM.Counter)
     RCM.delete()
-    return redirect('/CallEntery')
+    return redirect('/CallEntry')
 
 @login_required(login_url='Login')
 def PendingCall(request):
@@ -567,11 +567,12 @@ def AddInvoice(request):
         CM=ICountModel.objects.create(InvoiceNo=1,Ron='1')
         InvoiceNo = 1
     PN=PartyModel.objects.all()
-    PN={i.PartyName for i in PN} 
+    PN={i.PartyName for i in PN}
     Cluster = ClusterModel.objects.all()
     maindata={"PN":PN,'InvoiceNo':InvoiceNo,'Cluster':Cluster}
     if request.method=="POST":    
         PartyName=request.POST.get('PartyName')
+        InvoiceNo=request.POST.get('InvoiceNo')
         C_id=request.POST.get('Cluster')
         if C_id ==  '--Select--':
             return redirect('/AddInvoice')
@@ -617,8 +618,6 @@ def AddInvoiceMaIN(request):
         Type=request.POST.get('Type')
         Cr = ClusterModel.objects.get(id=int(C_id))
         Cluster=Cr.Name
-        print(C_id)
-        print(Cluster)
         if TotalA:
             TA = eval(TotalA)
         else:
@@ -648,7 +647,6 @@ def AddInvoiceMaIN(request):
                     TotalAmount = "%.2f" % TotalAmount
                     i.complet = '1'
                     i.IN=InvoiceNo
-                    print(InvoiceNo)
                     i.save()
                 MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,FromDate=FromDate,ToDate=ToDate,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount,Cluster_id=C_id,Cluster=Cluster)
                 MainInvoice.save()
@@ -657,8 +655,9 @@ def AddInvoiceMaIN(request):
                 except ICountModel.DoesNotExist:
                     CM=ICountModel.objects.create(InvoiceNo=1,Ron='1')
                     CM = ICountModel.objects.last()
-                CM.InvoiceNo = int(InvoiceNo)+1
-                CM.save()
+                if CM.InvoiceNo == InvoiceNo:
+                    CM.InvoiceNo = int(InvoiceNo)+1
+                    CM.save()
                 return redirect("/AddInvoice")
             else:
                 show=EntryModel.objects.filter(PartyName=PartyName,CallType=Type,complet='0',Cluster_id=C_id)
@@ -682,13 +681,13 @@ def AddInvoiceMaIN(request):
                     TotalAmount = "%.2f" % TotalAmount
                     i.complet = '1'
                     i.IN=InvoiceNo
-                    print(InvoiceNo)
                     i.save()
                 MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount,Cluster_id=C_id,Cluster=Cluster)
                 MainInvoice.save()
                 CM = ICountModel.objects.get(Ron='1')
-                CM.InvoiceNo = int(InvoiceNo)+1
-                CM.save()
+                if CM.InvoiceNo == InvoiceNo:
+                    CM.InvoiceNo = int(InvoiceNo)+1
+                    CM.save()
                 return redirect("/AddInvoice")
         else:
             return redirect("/AddInvoice")
@@ -1011,7 +1010,7 @@ def ClusterEL(request):
         for i in show:
             dt=InvoiceRCModel.objects.filter(Counter=i.Counter)
             for j in dt:
-                ws.append([num,j.RCDescription,i.Date.strftime('%d-%m-%Y'),i.CloseDate.strftime('%d-%m-%Y'),i.ChallanNo,i.ChallanDate.strftime('%d-%m-%Y'),i.CodeNo,i.Date.strftime('%d-%m-%Y'),j.RCCode,j.HSNCode,num+1000,j.Unit,j.Quantity,j.Rate,j.Amount,j.GSTRate + " %",j.GSTAmount,j.GSTRate + " %",j.GSTAmount,j.TotalAmount])
+                ws.append([num,j.RCDescription,i.Date.strftime('%d-%m-%Y'),i.CloseDate.strftime('%d-%m-%Y'),i.ChallanNo,i.ChallanDate.strftime('%d-%m-%Y'),i.CodeNo,i.Date.strftime('%d-%m-%Y'),j.RCCode,j.HSNCode,i.Code,j.Unit,j.Quantity,j.Rate,j.Amount,j.GSTRate + " %",j.GSTAmount,j.GSTRate + " %",j.GSTAmount,j.TotalAmount])
                 num+=1
             Amount = 0
             GSTAmount = 0
@@ -1050,7 +1049,7 @@ def ClusterEL(request):
         for i in show:
             dt=InvoiceRCModel.objects.filter(Counter=i.Counter)
             for j in dt:
-                ws.append([num,j.RCDescription,i.Date.strftime('%d-%m-%Y'),i.CloseDate.strftime('%d-%m-%Y'),i.ChallanNo,i.ChallanDate.strftime('%d-%m-%Y'),i.CodeNo,i.Date.strftime('%d-%m-%Y'),j.RCCode,j.HSNCode,num+1000,j.Unit,j.Quantity,j.Rate,j.Amount,j.GSTRate + " %",j.GSTAmount,j.GSTRate + " %",j.GSTAmount,j.TotalAmount])
+                ws.append([num,j.RCDescription,i.Date.strftime('%d-%m-%Y'),i.CloseDate.strftime('%d-%m-%Y'),i.ChallanNo,i.ChallanDate.strftime('%d-%m-%Y'),i.CodeNo,i.Date.strftime('%d-%m-%Y'),j.RCCode,j.HSNCode,i.Code,j.Unit,j.Quantity,j.Rate,j.Amount,j.GSTRate + " %",j.GSTAmount,j.GSTRate + " %",j.GSTAmount,j.TotalAmount])
                 num+=1
             Amount = 0
             GSTAmount = 0

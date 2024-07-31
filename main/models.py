@@ -41,7 +41,7 @@ class ClusterModel(models.Model):
         super(ClusterModel, self).save(*args, **kwargs)
 
 class PartyModel(models.Model):
-    Code = models.IntegerField(default=0)
+    Code = models.CharField(max_length=100, null=True, blank=True)
     PartyName = models.CharField(max_length=100)
     Cluster = models.CharField(max_length=100)
     Active = models.CharField(max_length=100,null=True, blank=True)
