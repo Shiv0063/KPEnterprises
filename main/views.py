@@ -1216,7 +1216,7 @@ def QuotationP(request,id):
     NAmount = 0
     Amount = 0
     for j in Rc:
-        if j.TYPES == 'RCCode':
+        if j.TYPES != 'NonRC':
             RCAmount += eval(j.Amount)
         else:
             NAmount += eval(j.Amount)
