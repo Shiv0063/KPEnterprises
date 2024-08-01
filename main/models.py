@@ -11,8 +11,8 @@ class GSTModel(models.Model):
 class CostCodeModel(models.Model):
     CostCode = models.IntegerField(default=0)
     Name = models.CharField(max_length=100)
-    Remarks = models.TextField() 
-
+    Remarks = models.TextField()
+    
 class PartyNameModel(models.Model):
     Name = models.CharField(max_length=100, null=True, blank=True)
 

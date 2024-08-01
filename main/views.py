@@ -1210,7 +1210,7 @@ def SoftCopy(request,id):
 def QuotationP(request,id):
     dt=QuotationModel.objects.get(id=id)
     party = PartyModel.objects.get(PartyName=dt.PartyName,City=dt.City,Branch=dt.Branch)
-    pt = CostCodeModel.objects.get(id=party.Active)
+    pt = ClusterModel.objects.get(id=party.Active)
     Rc = QTTModel.objects.filter(Counter=dt.Counter)
     RCAmount = 0
     NAmount = 0

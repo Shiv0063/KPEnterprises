@@ -49,7 +49,14 @@
         tfoot>tr>td {
             border: 1px solid black !important;
         }
+        #pageFooter {
+            display: table-footer-group; 
+        }
 
+        #pageFooter:after {
+            counter-increment: page;
+            content: counter(page); 
+        }
         @media print {
 
             #btn {
@@ -60,18 +67,23 @@
 </head>
 
 <body>
+    
     <div class="container-fluid">
         <div class="row justify-content-center mt-2">
             <div class="col-md-11">
                 <div class="text-black mt-2 w-100">
                     <div class="row ">
-                        <div class="col-12" style="border: 2px solid #B7B7DB !important;">
-                            <img src="{% static 'assets/bill/invoicehader1.png' %}" class="w-100" alt="">
+                        <div class="col-12 text-center" style="border: 1px solid #000 !important;">
+                            <h1 class="text-center" style="font-size: 55px; color: red !important;" >Giri Associates</h1>
+                            <p style="font-size: 21px;">Furniture & All Type of Maintenance Work</p>
+                            <!-- <img src="{% static 'assets/bill/invoicehader1.png' %}" class="w-100" alt=""> -->
                         </div>
-                        <div class="col-12" style="border: 2px solid #B7B7DB !important;">
-                            <img src="{% static 'assets/bill/invoicehader.png' %}" class="w-100" alt="">
+                        <div class="col-12 text-center" style="border: 1px solid #000 !important;">
+                            <h2 style="font-size: 28px;"><b>Office Address:</b></h2>
+                            <p style="font-size: 21px;">Block No. 34, Rajeshwari Society, Jetpur - 360 370. Mobile: +91 7069202026, Email: giriassociates31569@gmail.com</p>
+                            <!-- <img src="{% static 'assets/bill/invoicehader.png' %}" class="w-100" alt=""> -->
                         </div>
-                        <div class="col-12 text-center h2 mt-0 mb-0" style="border: 2px solid #B7B7DB !important;">
+                        <div class="col-12 text-center h2 mt-0 mb-0" style="border: 1px solid #000 !important;">
                             TAX INVOICE
                         </div>
                         <div class="col-12 border border-black text-black">
@@ -93,7 +105,7 @@
                                 <div class="col-4"></div>
                                 <div class="col-6">PAN : {{pd.PanNo}}</div>
                                 <div class="col-2">VENDOR CODE :</div>
-                                <div class="col-4"></div>
+                                <div class="col-4">278949</div>
                             </div>
                         </div>
                         <table class="col-12 border border-black text-black">
@@ -126,30 +138,32 @@
                                     <td class="p-1">{{i.Unit}}</td>
                                     <td class="p-1">{{i.Quantity}}</td>
                                     <td class="p-1">{{i.Rate}}</td>
-                                    <td class="p-1">{{i.Amount}}</td>
+                                    <td class="p-1 text-end">{{i.Amount}}</td>
                                     <td class="p-1">{{i.GSTRate}} %</td>
-                                    <td class="p-1">{{i.GSTAmount}}</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
                                     <td class="p-1">{{i.GSTRate}} %</td>
-                                    <td class="p-1">{{i.GSTAmount}}</td>
-                                    <td class="p-1">{{i.TotalAmount}}</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    <td class="p-1 text-end">{{i.TotalAmount}}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="8" class="text-end p-1"><b>Sub Total:</b></td>
-                                    <td class="p-1">{{Amount}}</td>
+                                    <td class="p-1 text-end">{{Amount}}</td>
                                     <td class="p-1"></td>
-                                    <td class="p-1">{{GSTAmount}}</td>
+                                    <td class="p-1 text-end">{{GSTAmount}}</td>
                                     <td class="p-1"></td>
-                                    <td class="p-1">{{GSTAmount}}</td>
-                                    <td class="p-1">{{TotalAmount}}</td>
+                                    <td class="p-1 text-end">{{GSTAmount}}</td>
+                                    <td class="p-1 text-end">{{TotalAmount}}</td>
                                 </tr>
                             </tfoot>
                             <table style="border-bottom: 1px #000 solid !important;">
                                 <thead>
                                     <tr>
                                         <td class="w-50">
+                                            <br>
+                                            <br>
                                             <b>Total Invoice Value (In figure) - {{TotalAmount}}</b><br>
                                             <b>Total Invoice Value (In Words) - <br><b id="wrod" style="text-transform: capitalize"></b></b>
                                         </td>
@@ -162,7 +176,7 @@
                                             <p>Giri Associates <br>Bank Name: HDFC Bank Ltd. <br>A/C No: 50200025382500 <br>IFSC Code: HDFC0000565</p>
                                         </td>
                                         <td class="w-50 text-end" style="border-left: 1px #000 solid !important;">
-                                            <p>For, Giri Associates <br>Authorised Signatory</p>
+                                            <p><b>{{InvoiceNo}}</b> <br>For, Giri Associates <br>Authorised Signatory</p>
                                         </td>
                                     </tr>
                                     <tr style="border-top: #000 1px solid;">
