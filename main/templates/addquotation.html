@@ -150,26 +150,15 @@
                             {% csrf_token %}
                             <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-md-4" id="">
-                                        <label for="" class="form-label">Type</label>
-                                        <select class="form-select" name="TYPES" id="TYPES" onchange="TYPE()" required>
-                                            <option value="RCCode" id="RCCodeSLT">RC Code</option>
-                                            <option value="NonRCCode" id="NonRCCodeSLT">Non RC Code</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-8" id="RCcodeF">
+                                    <div class="col-md-12" id="RCcodeF">
                                         <div id="RC">
                                             <label for="" class="form-label">RC Code</label>
                                             <select class="form-select" name="RCCode" id="RCCode" required>
                                                 <option>--Select--</option>
                                                 {% for i in RC %}
-                                                <option value="{{i.CodeNo}}">{{i.CodeNo}}</option>
+                                                <option value="{{i.CodeNo}}">{{i.CodeNo}} -- {{i.Description}}</option>
                                                 {% endfor %}
                                             </select>
-                                        </div>
-                                        <div id="NRC" style="display: none;">
-                                            <label for="" class="form-label">Non RC Code</label>
-                                            <input type="text" class="form-control" name="NRCCode" id="NRCCode">
                                         </div>
                                         <input type="hidden" name="sid" id="sid">
                                         <input type="hidden" id="Counter" value="{{CM.QuotationNo}}">
@@ -302,15 +291,18 @@
     });
     $("#formAdd select[name='City']").on('change', function () {
         var $this = $(this);
+        PN = $('#Party').val();
         if ($this.val() != '') {
             $("#formAdd select[name='Branch']").find('.after2').nextAll().remove();
             $.ajax({
-                url: '/Branch/' + $this.val(),
-                type: 'GET',
+                url: '/Branch',
+                type: 'POST',
+                data: { value: PN,City: $this.val() },
                 success: function (resp) {
                     let options = '';
                     resp.Branch.forEach(City => {
                         City2 = City.replace(" ", "%20");
+                        City2 = City2.replace(" ", "%20");
                         options += '<option value=' + City2 + '>' + City + '</option>';
                     });
                     $("#formAdd select[name='Branch']").find('.after2').after(options);
@@ -334,7 +326,6 @@
                 data: { Party: $Party.val(), City: $City.val(), Branch: $this.val() },
                 success: function (resp) {
                     $('#Code').val(resp.RC);
-                    $('#Cluster').val(resp.CL + " -- " + resp.AL);
                     $('#Address').val(resp.AD);
                 },
                 error: function (resp) {
@@ -386,6 +377,9 @@
                 success: function (resp) {
                     RCV = $('#Rate');
                     RCV.val(resp.RC);
+                    RCV2 = $('#RCDescription');
+                    RCV2.val(resp.RCDescription);
+
                 },
                 error: function (resp) {
                     console.log('Something went wrong');
@@ -430,23 +424,6 @@
         else {
             let get = document.getElementById('OthersID');
             get.style.display = "none";
-        }
-
-    }
-    var $TYPES = $('#TYPES');
-    function TYPE() {
-        var num1 = $TYPES.val();
-        if (num1 == "RCCode") {
-            let get = document.getElementById('RC');
-            get.style.display = "block";
-            let get2 = document.getElementById('NRC');
-            get2.style.display = "none";
-        }
-        else {
-            let get = document.getElementById('RC');
-            get.style.display = "none";
-            let get2 = document.getElementById('NRC');
-            get2.style.display = "block";
         }
 
     }

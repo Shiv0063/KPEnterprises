@@ -94,13 +94,13 @@
                                 <div class="col-6 text-center"><b>Billing Address</b></div>
                                 <div class="col-6 text-center"><b>Ship to Party /Delivery address</b></div>
                                 <div class="col-1"><b>Name :</b></div>
-                                <div class="col-5">HDFC BANK LTD.</div>
+                                <div class="col-5">{{party.PartyName}}</div>
                                 <div class="col-2"><b>Location Code :</b></div>
-                                <div class="col-4"></div>
+                                <div class="col-4">{{party.Code}}</div>
                                 <div class="col-1"><b>Add :</b></div>
                                 <div class="col-5">Administration Department,</div>
                                 <div class="col-2"><b>Location Name:</b></div>
-                                <div class="col-4"></div>
+                                <div class="col-4">{{party.Branch}}</div>
                                 <div class="col-1"><b>State :</b></div>
                                 <div class="col-5">GUJRAT</div>
                                 <div class="col-2"><b>Location Type</b></div>
@@ -109,7 +109,7 @@
                                 <div class="col-5">24AAACH2702H3Z6</div>
                                 <div class="col-2"><b>State :</b></div>
                                 <div class="col-4">GUJRAT</div>
-                                <div class="col-6"><b>COST CODE :- COST CODE NAME : -</b></div>
+                                <div class="col-6"><b>COST CODE :- {{pt.CostCode}} ,COST CODE NAME : -{{pt.Name}}</b></div>
                                 <div class="col-2"><b>GSTN :</b></div>
                                 <div class="col-4">24AAACH2702H3Z6</div>
                                 <div class="col-1"><b>ASD No :-</b></div>
@@ -135,7 +135,7 @@
                             </thead>
                             <tbody>
                                 {% for i in Rc %}
-                                {% if i.TYPES == 'RCCode' %}
+                                {% if i.TYPES == 'RC' or i.TYPES != 'NonRC' %}
                                 <tr>
                                     <td class="p-1">{{forloop.counter}}</td>
                                     <td class="p-1">{{i.RCDescription}}</td>
@@ -159,7 +159,7 @@
                             </tbody>
                             <tbody>
                                 {% for i in Rc %}
-                                {% if i.TYPES == 'NonRCCode' %}
+                                {% if i.TYPES == 'NonRC' %}
                                 <tr>
                                     <td class="p-1">{{forloop.counter}}</td>
                                     <td class="p-1">{{i.RCDescription}}</td>

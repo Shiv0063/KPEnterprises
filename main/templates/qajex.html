@@ -3,21 +3,13 @@
     $(document).on('submit', '#post-form', function (e) {
         e.preventDefault();
         output = '';
-        TYPES= $('#TYPES').val()
-        if (TYPES == "RCCode"){
-            RCCodeval= $('#RCCode').val();
-        }
-        else{
-            RCCodeval = $('#NRCCode').val()
-        }
         $.ajax({
             type: "POST",
             url: '/QRCCreat',
             data: {
                 sid: $('#sid').val(),
                 Counter: $('#Counter').val(),
-                TYPES:TYPES,
-                RCCode: RCCodeval,
+                RCCode: $('#RCCode').val(),
                 RCDescription: $('#RCDescription').val(),
                 Quantity: $('#Quantity').val(),
                 Rate: $('#Rate').val(),

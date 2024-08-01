@@ -57,6 +57,7 @@ class PartyModel(models.Model):
     NO6 = models.CharField(max_length=100, null=True, blank=True)
 
 class RateModel(models.Model):
+    Type = models.CharField(max_length=100,null=True, blank=True)
     CodeNo = models.CharField(max_length=100)
     Description = models.TextField() 
     HSNCode = models.IntegerField(default=0)

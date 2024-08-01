@@ -31,12 +31,6 @@ def home(request):
     PC = EntryModel.objects.filter(CallType='Call',complet='0').count()
     PW = EntryModel.objects.filter(CallType='WorkOrder',complet='0').count()
     CC = EntryModel.objects.filter(complet='1').count()
-    # ICountModel.objects.all().delete()
-    # InvoiceModel.objects.all().delete()
-    # InvoiceRCModel.objects.all().delete()
-    # RCModel.objects.all().delete()
-    # EntryModel.objects.all().delete()
-    # CountModel.objects.all().delete()
     dt = EntryModel.objects.filter(complet='1')
     # for i in dt:
     #     print(i.IN)
@@ -508,6 +502,7 @@ def AddRate(request):
     data=GSTModel.objects.all()
     if request.method=="POST":    
         CodeNo=request.POST.get('CodeNo')
+        Type=request.POST.get('TYPES')
         Description=request.POST.get('Description')
         HSNCode=request.POST.get('HSNCode')
         Unit=request.POST.get('Unit')
@@ -519,7 +514,7 @@ def AddRate(request):
         CGST=data.CGST    
         IGSTName=request.POST.get('IGSTName')
         IGST=0
-        dt=RateModel.objects.create(CodeNo=CodeNo,Description=Description,HSNCode=HSNCode,Unit=Unit,Rate=Rate,Remarks=Remarks,GSTName=GSTName,SGST=SGST,CGST=CGST,IGSTName=IGSTName,IGST=IGST)
+        dt=RateModel.objects.create(Type=Type,CodeNo=CodeNo,Description=Description,HSNCode=HSNCode,Unit=Unit,Rate=Rate,Remarks=Remarks,GSTName=GSTName,SGST=SGST,CGST=CGST,IGSTName=IGSTName,IGST=IGST)
         dt.save()
         return redirect('/RCCode')
     return render(request,'addrate.html',{'data':data})
@@ -560,6 +555,7 @@ def Invoice(request):
 
 @login_required(login_url='Login')
 def AddInvoice(request):
+    # ICountModel.objects.all().delete()
     try:
         CM=ICountModel.objects.get(Ron='1')
         InvoiceNo = CM.InvoiceNo
@@ -650,12 +646,8 @@ def AddInvoiceMaIN(request):
                     i.save()
                 MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,FromDate=FromDate,ToDate=ToDate,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount,Cluster_id=C_id,Cluster=Cluster)
                 MainInvoice.save()
-                try:
-                    CM=ICountModel.objects.last()
-                except ICountModel.DoesNotExist:
-                    CM=ICountModel.objects.create(InvoiceNo=1,Ron='1')
-                    CM = ICountModel.objects.last()
-                if CM.InvoiceNo == InvoiceNo:
+                CM = ICountModel.objects.get(Ron='1')
+                if str(CM.InvoiceNo) == InvoiceNo:
                     CM.InvoiceNo = int(InvoiceNo)+1
                     CM.save()
                 return redirect("/AddInvoice")
@@ -685,7 +677,7 @@ def AddInvoiceMaIN(request):
                 MainInvoice = InvoiceModel.objects.create(PartyName=PartyName,InvoiceData=InvoiceData,InvoiceNo=InvoiceNo,BillMonth=BillMonth,BillYear=BillYear,Tax=Tax,datein=datein,Type=Type,Amount=TotalA,GSTAmount=GA,TotalAmount=TotalAmount,Cluster_id=C_id,Cluster=Cluster)
                 MainInvoice.save()
                 CM = ICountModel.objects.get(Ron='1')
-                if CM.InvoiceNo == InvoiceNo:
+                if str(CM.InvoiceNo) == InvoiceNo:
                     CM.InvoiceNo = int(InvoiceNo)+1
                     CM.save()
                 return redirect("/AddInvoice")
@@ -804,13 +796,14 @@ def QRCCreat(request):
     if request.method == 'POST':
         sid = request.POST.get('sid')
         Counter = request.POST['Counter']
-        TYPES = request.POST['TYPES']
         RCCode = request.POST['RCCode']
         RCDescription = request.POST['RCDescription']
         Quantity = request.POST['Quantity']
         Rate = request.POST['Rate']
         Labour = request.POST['Labour']
         Amount = request.POST['Amount']
+        df = RateModel.objects.get(CodeNo=RCCode)
+        TYPES = df.Type
         if sid == '':
             data=QTTModel(Counter=Counter,RCCode=RCCode,RCDescription=RCDescription,Quantity=Quantity,Rate=Rate,Labour=Labour,Amount=Amount,TYPES=TYPES)
         else:
@@ -1216,7 +1209,8 @@ def SoftCopy(request,id):
 @login_required(login_url='Login')
 def QuotationP(request,id):
     dt=QuotationModel.objects.get(id=id)
-    party = PartyModel.objects.all()
+    party = PartyModel.objects.get(PartyName=dt.PartyName,City=dt.City,Branch=dt.Branch)
+    pt = CostCodeModel.objects.get(id=party.Active)
     Rc = QTTModel.objects.filter(Counter=dt.Counter)
     RCAmount = 0
     NAmount = 0
@@ -1230,11 +1224,7 @@ def QuotationP(request,id):
     RCAmount = "%.2f" % RCAmount
     NAmount = "%.2f" % NAmount
     Amount = "%.2f" % Amount
-    p = {}
-    for i in party:
-        p['PartyName'] = i.PartyName
-        break
-    main={'dt':dt,'party':party,'p':p,'Rc':Rc,'RCAmount':RCAmount,'NAmount':NAmount,'Amount':Amount}
+    main={'dt':dt,'party':party,'pt':pt,'Rc':Rc,'RCAmount':RCAmount,'NAmount':NAmount,'Amount':Amount}
     return render(request,'quotationp.html',main)
 
 @login_required(login_url='Login')
