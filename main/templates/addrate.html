@@ -17,7 +17,7 @@
             </div>
             <div class="col-md-7 col-3 text-md-end">
                 <div class="d-flex justify-content-md-end align-items-center">
-                    <a href="/Rate" class="btn btn-outline-success mb-2 me-2">Back</a>
+                    <a href="/RCCode" class="btn btn-outline-success mb-2 me-2">Back</a>
                 </div>
             </div>
             <div class="col-12">
@@ -35,7 +35,7 @@
 <div class="content p-4 pt-0 d-flex flex-column-fluid">
     <div class="container-fluid px-0">
         <div class="row justify-content-start">
-            <div class="col-md-9 col-12 mb-1">
+            <div class="col-md-12 col-12 mb-1">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="mb-1">Add RC Code</h5>
@@ -50,13 +50,9 @@
                                     <option value="NonRC" id="NonRCCodeSLT">Non RC Code</option>
                                 </select>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <label for="" class="form-label"><b>RC Code No</b></label>
                                 <input type="text" class="form-control" name="CodeNo" id="CodeNo" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="" class="form-label"><b>Description</b></label>
-                                <textarea class="form-control" id="" rows="2" name="Description" required></textarea>
                             </div>
                             <div class="col-md-4">
                                 <label for="" class="form-label"><b>HSN Code</b></label>
@@ -70,11 +66,7 @@
                                 <label for="" class="form-label"><b>Rate</b></label>
                                 <input type="text" class="form-control" name="Rate" required>
                             </div>
-                            <div class="col-md-12">
-                                <label for="" class="form-label"><b>Remarks</b></label>
-                                <textarea class="form-control" id="" rows="2" name="Remarks"></textarea>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="" class="form-label"><b>GST</b></label>
                                 <select id="" class="form-select" name="GSTName" required>
                                     <option selected>Choose...</option>
@@ -84,12 +76,15 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="" class="form-label"><b>IGST</b></label>
-                                <select id="" class="form-select" name="IGSTName">
-                                    <option selected value="">Choose...</option>
-                                    <option>...</option>
-                                </select>
+                                <label for="" class="form-label"><b>Description</b></label>
+                                <textarea class="form-control" id="" rows="2" name="Description" required></textarea>
                             </div>
+                           
+                            <div class="col-md-6">
+                                <label for="" class="form-label"><b>Remarks</b></label>
+                                <textarea class="form-control" id="" rows="2" name="Remarks"></textarea>
+                            </div>
+                            
                             <div class="col-md-12">
                                 <div class="row justify-content-center">
                                     <button type="submit" class="col-5 btn btn-success m-1">Save</button>

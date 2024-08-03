@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required,user_passes_test
 # Create your views here.
-from main.models import CostCodeModel,ClusterModel,GSTModel,LabourModel,PartyModel,RateModel,CountModel,RCModel,EntryModel,InvoiceRCModel,InvoiceModel,ICountModel,QCountModel,QTTModel,PartyNameModel,QuotationModel,ProfileModel
+from main.models import CostCodeModel,ClusterModel,GSTModel,LabourModel,PartyModel,RateModel,CountModel,RCModel,EntryModel,InvoiceRCModel,InvoiceModel,ICountModel,QCountModel,PartyNameModel,QuotationModel,ProfileModel,QTTGSTModel
 from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.models import User,Group
 from django.views.decorators.csrf import csrf_exempt
@@ -512,9 +512,9 @@ def AddRate(request):
         data=GSTModel.objects.get(GSTName=GSTName)
         SGST=data.SGST
         CGST=data.CGST    
-        IGSTName=request.POST.get('IGSTName')
+        # IGSTName=request.POST.get('IGSTName')
         IGST=0
-        dt=RateModel.objects.create(Type=Type,CodeNo=CodeNo,Description=Description,HSNCode=HSNCode,Unit=Unit,Rate=Rate,Remarks=Remarks,GSTName=GSTName,SGST=SGST,CGST=CGST,IGSTName=IGSTName,IGST=IGST)
+        dt=RateModel.objects.create(Type=Type,CodeNo=CodeNo,Description=Description,HSNCode=HSNCode,Unit=Unit,Rate=Rate,Remarks=Remarks,GSTName=GSTName,SGST=SGST,CGST=CGST,IGST=IGST)
         dt.save()
         return redirect('/RCCode')
     return render(request,'addrate.html',{'data':data})
@@ -535,8 +535,6 @@ def EditRate(request,id):
         dt=GSTModel.objects.get(GSTName=GSTName)
         data.SGST=dt.SGST
         data.CGST=dt.CGST    
-        data.IGSTName=request.POST.get('IGSTName')
-        data.IGST=0
         data.save()
         return redirect('/RCCode')
     return render(request,'editrate.html',{'data':data,'gst':gst})
@@ -628,9 +626,14 @@ def AddInvoiceMaIN(request):
                     GA=0
                     for j in dt:
                         Rate = RateModel.objects.get(CodeNo=j.RCCode)
-                        GSTRate = Rate.SGST
-                        GSTAmount = eval(j.Amount)* int(GSTRate) / 100
-                        GSTTA = GSTAmount + GSTAmount
+                        if Tax == 'GST':
+                            GSTRate = int(Rate.SGST)
+                            GSTAmount = eval(j.Amount)* GSTRate / 100
+                            GSTTA = GSTAmount + GSTAmount
+                        else:
+                            GSTRate = int(Rate.SGST)*2
+                            GSTAmount = eval(j.Amount)* GSTRate / 100
+                            GSTTA = GSTAmount
                         GA +=GSTTA
                         TotalAmount = eval(j.Amount) + GSTTA
                         GSTTA = "%.2f" % GSTTA
@@ -658,9 +661,14 @@ def AddInvoiceMaIN(request):
                     GA=0
                     for j in dt:
                         Rate = RateModel.objects.get(CodeNo=j.RCCode)
-                        GSTRate = Rate.SGST
-                        GSTAmount = eval(j.Amount) * int(GSTRate) / 100
-                        GSTTA = GSTAmount + GSTAmount
+                        if Tax == 'GST':
+                            GSTRate = int(Rate.SGST)
+                            GSTAmount = eval(j.Amount) * GSTRate / 100
+                            GSTTA = GSTAmount + GSTAmount
+                        else:
+                            GSTRate = int(Rate.SGST)*2
+                            GSTAmount = eval(j.Amount) * GSTRate / 100
+                            GSTTA = GSTAmount
                         GA +=GSTTA
                         TotalAmount = eval(j.Amount) + GSTTA
                         GSTTA = "%.2f" % GSTTA
@@ -702,8 +710,8 @@ def AddQuotation(request):
     CC=CostCodeModel.objects.all()
     Cluster=ClusterModel.objects.all()
     RC = RateModel.objects.all()
-    RCM=QTTModel.objects.all()
-    RCM2=QTTModel.objects.filter(Counter=QuotationNo)
+    RCM=QTTGSTModel.objects.all()
+    RCM2=QTTGSTModel.objects.filter(Counter=QuotationNo)
     TAmount=0
     for i in RCM2:
         TAmount=TAmount+ eval(i.Amount)
@@ -726,12 +734,44 @@ def AddQuotation(request):
         Subject = request.POST.get('Subject')
         AreaOfWork = request.POST.get('AreaOfWork')
         Remark = request.POST.get('Remark')
-        TotalAmount = request.POST.get('TotalAmount')
+        Amount = request.POST.get('TotalAmount')
+        Type = request.POST.get('Type')
+        BRName = request.POST.get('BRName')
+        MOBILENO = request.POST.get('MOBILENO')
+        EmailID = request.POST.get('EmailID')
+        ASDDate = request.POST.get('ASDDate')
+        ASDNo = request.POST.get('ASDNo')
         TC = request.POST.get('TC')
         if WorkEngaged != "Others":
             Other = ''
-        dt=QuotationModel.objects.create(Counter=Counter,QuotationNo=QuotationNo,Date=Date,PartyName=PartyName,City=City,Branch=Branch,Address=Address,Problem=Problem,Code=Code,CallRef=CallRef,CallNo=CallNo,WorkEngaged=WorkEngaged,Other=Other,Subject=Subject,AreaOfWork=AreaOfWork,Remark=Remark,TC=TC,TotalAmount=TotalAmount)
+        RCM=QTTGSTModel.objects.filter(Counter=Counter)
+        GSTA=0
+        TA=0
+        for i in RCM:
+            fg = RateModel.objects.get(CodeNo=i.RCCode)
+            if Type == 'GST':
+                GSTRate = int(fg.SGST)
+                GSTAmount = eval(i.Amount)* GSTRate / 100
+                GSTTA = GSTAmount + GSTAmount
+            else:
+                GSTRate = int(fg.SGST)*2
+                GSTAmount = eval(i.Amount)* GSTRate / 100
+                GSTTA = GSTAmount
+            TotalAmount = eval(i.Amount) + GSTTA
+            TA += TotalAmount
+            GSTA += GSTAmount
+            i.GSTRate=str(GSTRate)
+            i.GSTTA = "%.2f" % GSTTA
+            GSTAmount = "%.2f" % GSTAmount
+            i.GSTAmount = GSTAmount
+            TotalAmount = "%.2f" % TotalAmount
+            i.TotalAmount = TotalAmount
+            i.save()
+        GSTA = "%.2f" % GSTA
+        TA = "%.2f" % TA
+        dt=QuotationModel.objects.create(Counter=Counter,QuotationNo=QuotationNo,Date=Date,PartyName=PartyName,City=City,Branch=Branch,Address=Address,Problem=Problem,Code=Code,CallRef=CallRef,CallNo=CallNo,WorkEngaged=WorkEngaged,Other=Other,Subject=Subject,AreaOfWork=AreaOfWork,Remark=Remark,TC=TC,Amount=Amount,Type=Type,BRName=BRName,MOBILENO=MOBILENO,EmailID=EmailID,ASDDate=ASDDate,ASDNo=ASDNo,GSTAmount=GSTA,TotalAmount=TA)
         dt.save()
+
         CM.QuotationNo = int(QuotationNo)+1
         CM.save()
         return redirect('/AddQuotation')
@@ -740,7 +780,7 @@ def AddQuotation(request):
 @login_required(login_url='Login')
 def DeleteQuotation(request,id):
     data=QuotationModel.objects.get(id=id)
-    RC=QTTModel.objects.filter(Counter=data.Counter)
+    RC=QTTGSTModel.objects.filter(Counter=data.Counter)
     RC.delete()
     data.delete()
     return redirect('/Quotation')
@@ -757,15 +797,16 @@ def EditQuotation(request,id):
     CC=CostCodeModel.objects.all()
     Cluster=ClusterModel.objects.all()
     RC = RateModel.objects.all()
-    RCM=QTTModel.objects.all()
-    RCM2=QTTModel.objects.filter(Counter=dt.QuotationNo)
+    RCM=QTTGSTModel.objects.all()
+    RCM2=QTTGSTModel.objects.filter(Counter=dt.QuotationNo)
     TAmount=0
     for i in RCM2:
         TAmount=TAmount+ eval(i.Amount)
     maindata={'CC':CC,'dt':dt,'RC':RC,'RCM':RCM,'RCM2':RCM2,'Branch':Branch,'City':City,'QuotationNo':dt.QuotationNo,'TAmount':TAmount,'PN':PN,'Cluster':Cluster}
     if request.method=="POST":
         dt = QuotationModel.objects.get(id=id)
-        dt.Counter = request.POST.get('Counter')
+        Counter = request.POST.get('Counter')
+        dt.Counter = Counter
         dt.QuotationNo = request.POST.get('QuotationNo')
         dt.Date = request.POST.get('Date')
         dt.PartyName = request.POST.get('PartyName')
@@ -786,8 +827,42 @@ def EditQuotation(request,id):
         dt.Subject = request.POST.get('Subject')
         dt.AreaOfWork = request.POST.get('AreaOfWork')
         dt.Remark = request.POST.get('Remark')
-        dt.TotalAmount = request.POST.get('TotalAmount')
+        dt.Amount = request.POST.get('TotalAmount')
         dt.TC = request.POST.get('TC')
+        Type = request.POST.get('Type')
+        dt.Type = Type
+        dt.BRName = request.POST.get('BRName')
+        dt.MOBILENO = request.POST.get('MOBILENO')
+        dt.EmailID = request.POST.get('EmailID')
+        dt.ASDDate = request.POST.get('ASDDate')
+        dt.ASDNo = request.POST.get('ASDNo')
+        RCM=QTTGSTModel.objects.filter(Counter=Counter)
+        GSTA=0
+        TA=0
+        for i in RCM:
+            fg = RateModel.objects.get(CodeNo=i.RCCode)
+            if Type == 'GST':
+                GSTRate = int(fg.SGST)
+                GSTAmount = eval(i.Amount)* GSTRate / 100
+                GSTTA = GSTAmount + GSTAmount
+            else:
+                GSTRate = int(fg.SGST)*2
+                GSTAmount = eval(i.Amount)* GSTRate / 100
+                GSTTA = GSTAmount
+            TotalAmount = eval(i.Amount) + GSTTA
+            TA += TotalAmount
+            GSTA += GSTAmount
+            i.GSTRate=str(GSTRate)
+            i.GSTTA = "%.2f" % GSTTA
+            GSTAmount = "%.2f" % GSTAmount
+            i.GSTAmount = GSTAmount
+            TotalAmount = "%.2f" % TotalAmount
+            i.TotalAmount = TotalAmount
+            i.save()
+        GSTA = "%.2f" % GSTA
+        TA = "%.2f" % TA
+        dt.GSTAmount=GSTA
+        dt.TotalAmount=TA
         dt.save()
         return redirect('/Quotation')
     return render(request,'editquotation.html',maindata)
@@ -805,13 +880,13 @@ def QRCCreat(request):
         df = RateModel.objects.get(CodeNo=RCCode)
         TYPES = df.Type
         if sid == '':
-            data=QTTModel(Counter=Counter,RCCode=RCCode,RCDescription=RCDescription,Quantity=Quantity,Rate=Rate,Labour=Labour,Amount=Amount,TYPES=TYPES)
+            data=QTTGSTModel(Counter=Counter,RCCode=RCCode,RCDescription=RCDescription,Quantity=Quantity,Rate=Rate,Labour=Labour,Amount=Amount,TYPES=TYPES)
         else:
-            data=QTTModel(id=sid,Counter=Counter,RCCode=RCCode,RCDescription=RCDescription,Quantity=Quantity,Rate=Rate,Labour=Labour,Amount=Amount,TYPES=TYPES)
+            data=QTTGSTModel(id=sid,Counter=Counter,RCCode=RCCode,RCDescription=RCDescription,Quantity=Quantity,Rate=Rate,Labour=Labour,Amount=Amount,TYPES=TYPES)
         data.save()
         # data load
-        show=QTTModel.objects.filter(Counter=Counter).values()
-        RCM2=QTTModel.objects.filter(Counter=Counter)
+        show=QTTGSTModel.objects.filter(Counter=Counter).values()
+        RCM2=QTTGSTModel.objects.filter(Counter=Counter)
         TAmount=0
         for i in RCM2:
             TAmount=TAmount+ eval(i.Amount)
@@ -821,17 +896,17 @@ def QRCCreat(request):
 def QRCEdit(request):
     if request.method == 'POST':
         id = request.POST.get('sid')
-        data=QTTModel.objects.get(pk=id)
+        data=QTTGSTModel.objects.get(pk=id)
         mydata={"id":data.id,"Counter":data.Counter,"RCCode":data.RCCode,"RCDescription":data.RCDescription,"Quantity":data.Quantity,"Rate":data.Rate,"Labour":data.Labour,"Amount":data.Amount,'TYPES':data.TYPES}
         return JsonResponse(mydata)
 
 def QRCDelete(request):
     if request.method == 'POST':
         id = request.POST.get('sid')
-        data=QTTModel.objects.get(pk=id)
+        data=QTTGSTModel.objects.get(pk=id)
         i=data.Counter
         data.delete()
-        RCM2=QTTModel.objects.filter(Counter=i)
+        RCM2=QTTGSTModel.objects.filter(Counter=i)
         TAmount=0
         for i in RCM2:
             TAmount=TAmount+ eval(i.Amount)
@@ -841,7 +916,7 @@ def QRCDelete(request):
     
 @login_required(login_url='Login')
 def ClaseQuotation(request,id):
-        data=QTTModel.objects.filter(Counter=id)
+        data=QTTGSTModel.objects.filter(Counter=id)
         data.delete()
         return redirect('/Quotation')
 
@@ -1206,25 +1281,48 @@ def SoftCopy(request,id):
     wb.save(response)
     return response
 
+
+import datetime
+
 @login_required(login_url='Login')
 def QuotationP(request,id):
     dt=QuotationModel.objects.get(id=id)
     party = PartyModel.objects.get(PartyName=dt.PartyName,City=dt.City,Branch=dt.Branch)
     pt = ClusterModel.objects.get(id=party.Active)
-    Rc = QTTModel.objects.filter(Counter=dt.Counter)
+    Rc = QTTGSTModel.objects.filter(Counter=dt.Counter)
+    x = datetime.datetime.now()
+    y= x.year
+    du = int(y) - 2001
+    QuotationidNo = 'GA'+str(y)+str(du)+'-'+str(dt.QuotationNo)
     RCAmount = 0
+    RCGAmount = 0
+    GRCAmount = 0
     NAmount = 0
+    NGAmount = 0
+    GNAmount = 0
     Amount = 0
+    GAmount = 0
     for j in Rc:
         if j.TYPES != 'NonRC':
             RCAmount += eval(j.Amount)
+            GRCAmount += eval(j.GSTTA)
+            RCGAmount += eval(j.TotalAmount)
+
         else:
             NAmount += eval(j.Amount)
+            GNAmount += eval(j.GSTTA)
+            NGAmount += eval(j.TotalAmount)
         Amount += eval(j.Amount)
+        GAmount += eval(j.TotalAmount)
     RCAmount = "%.2f" % RCAmount
+    RCGAmount = "%.2f" % RCGAmount
+    GRCAmount = "%.2f" % GRCAmount
+    NGAmount = "%.2f" % NGAmount
     NAmount = "%.2f" % NAmount
+    GNAmount = "%.2f" % GNAmount
     Amount = "%.2f" % Amount
-    main={'dt':dt,'party':party,'pt':pt,'Rc':Rc,'RCAmount':RCAmount,'NAmount':NAmount,'Amount':Amount}
+    GAmount = "%.2f" % GAmount
+    main={'dt':dt,'party':party,'pt':pt,'Rc':Rc,'RCAmount':RCAmount,'NAmount':NAmount,'Amount':Amount,'GRCAmount':GRCAmount,'GNAmount':GNAmount,'GAmount':GAmount,'RCGAmount':RCGAmount,'NGAmount':NGAmount,'QuotationidNo':QuotationidNo}
     return render(request,'quotationp.html',main)
 
 @login_required(login_url='Login')

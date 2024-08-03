@@ -120,10 +120,15 @@
                                     <th class="p-1">Qty</th>
                                     <th class="p-1">Rate</th>
                                     <th class="p-1">Total</th>
+                                    {% if dt.Tax == 'GST' %}
                                     <th class="p-1">SGST <br>Rate</th>
                                     <th class="p-1">SGST <br>Amount</th>
                                     <th class="p-1">CGST <br>Rate</th>
                                     <th class="p-1">CGST <br>Amount</th>
+                                    {% else %}
+                                    <th class="p-1">IGST <br>Rate</th>
+                                    <th class="p-1">IGST <br>Amount</th>
+                                    {% endif %}
                                     <th class="p-1">Total</th>
                                 </tr>
                             </thead>
@@ -139,10 +144,15 @@
                                     <td class="p-1">{{i.Quantity}}</td>
                                     <td class="p-1">{{i.Rate}}</td>
                                     <td class="p-1 text-end">{{i.Amount}}</td>
+                                    {% if dt.Tax == 'GST' %}
                                     <td class="p-1">{{i.GSTRate}} %</td>
                                     <td class="p-1 text-end">{{i.GSTAmount}}</td>
                                     <td class="p-1">{{i.GSTRate}} %</td>
                                     <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    {% else %}
+                                    <td class="p-1">{{i.GSTRate}} %</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    {% endif %}
                                     <td class="p-1 text-end">{{i.TotalAmount}}</td>
                                 </tr>
                                 {% endfor %}
@@ -151,10 +161,16 @@
                                 <tr>
                                     <td colspan="8" class="text-end p-1"><b>Sub Total:</b></td>
                                     <td class="p-1 text-end">{{Amount}}</td>
+                                    {% if dt.Tax == 'GST' %}
                                     <td class="p-1"></td>
                                     <td class="p-1 text-end">{{GSTAmount}}</td>
                                     <td class="p-1"></td>
                                     <td class="p-1 text-end">{{GSTAmount}}</td>
+                                    {% else %}
+                                    <td class="p-1"></td>
+                                    <td class="p-1 text-end">{{GSTAmount}}</td>
+                                    {% endif %}
+
                                     <td class="p-1 text-end">{{TotalAmount}}</td>
                                 </tr>
                             </tfoot>
@@ -169,6 +185,8 @@
                                         </td>
                                         <td class="w-50 text-end" style="border-left: 1px #000 solid !important;">
                                             <p>Data Regions within table/matrix cells are ignored.</p>
+                                            <p><b>{{InvoiceNo}}</b></p>
+                                            
                                         </td>
                                     </tr>
                                     <tr style="border-top: #000 1px solid;">
@@ -176,7 +194,10 @@
                                             <p>Giri Associates <br>Bank Name: HDFC Bank Ltd. <br>A/C No: 50200025382500 <br>IFSC Code: HDFC0000565</p>
                                         </td>
                                         <td class="w-50 text-end" style="border-left: 1px #000 solid !important;">
-                                            <p><b>{{InvoiceNo}}</b> <br>For, Giri Associates <br>Authorised Signatory</p>
+                                            <p>For, Giri Associates <br>Authorised Signatory</p>
+                                            <br>
+                                            <br>
+                                            <br>
                                         </td>
                                     </tr>
                                     <tr style="border-top: #000 1px solid;">

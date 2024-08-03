@@ -70,22 +70,22 @@
                                 <div class="col-2"><p><b>Name of company / Agency</b></p></div>
                                 <div class="col-4"><b>GIRI ASSOCIATES</b></div>
                                 <div class="col-2"><b>Quotation Date :</b></div>
-                                <div class="col-4"></div>
+                                <div class="col-4">{{dt.ndate}}</div>
                                 <div class="col-2"><b>Registered Address :</b></div>
                                 <div class="col-4">Rajeshwari Society, Junagadh Road, Jetpur-360370</div>
                                 <div class="col-2"><b>Quotation No :</b></div>
-                                <div class="col-4">GA202324-</div>
+                                <div class="col-4">{{QuotationidNo}}</div>
                                 <div class="col-2"><b>Email ID :-</b></div>
                                 <div class="col-2"><a href="" style="text-wrap:wrap; word-break: break-all;">giriassociates31569@gmail.com</a></div>
                                 <div class="col-2"><b>Mobile No : 7069202026</b></div>
                                 <div class="col-3"><b>Branch Representative Name :</b></div>
-                                <div class="col-3"></div>
+                                <div class="col-3">{{dt.BRName}}</div>
                                 <div class="col-1"><b>State</b></div>
                                 <div class="col-1"></div>
                                 <div class="col-2">GUJRAT</div>
                                 <div class="col-2"><b>vendor Code : 278949</b></div>
-                                <div class="col-2"><b>Email ID :-</b></div>
-                                <div class="col-4">MOBILE NO. -</div>
+                                <div class="col-3"><b>Email ID</b> :- {{dt.EmailID}}</div>
+                                <div class="col-3"><b>MOBILE NO.</b> - {{dt.MOBILENO}}</div>
                                 <div class="col-1">GSTN</div>
                                 <div class="col-1"></div>
                                 <div class="col-4">24BFEPA8987E1ZE</div>
@@ -113,9 +113,9 @@
                                 <div class="col-2"><b>GSTN :</b></div>
                                 <div class="col-4">{{party.GSTNo}}</div>
                                 <div class="col-1"><b>ASD No :-</b></div>
-                                <div class="col-5"></div>
+                                <div class="col-5">{{dt.ASDNo}}</div>
                                 <div class="col-1"><b>ASD Date :-</b></div>
-                                <div class="col-5"></div>
+                                <div class="col-5">{{dt.NASDDate}}</div>
                                 <div class="col-12" style="margin: 0px;padding: 3px;color: black;border: #000 1px solid !important;">SUB:</div>
                             </div>
                         </div>
@@ -130,6 +130,16 @@
                                     <th class="p-1">UOM</th>
                                     <th class="p-1">Qty</th>
                                     <th class="p-1">Rate</th>
+                                    <th class="p-1">Total</th>
+                                    {% if dt.Type == 'GST' %}
+                                    <th class="p-1">SGST <br>Rate</th>
+                                    <th class="p-1">SGST <br>Amount</th>
+                                    <th class="p-1">CGST <br>Rate</th>
+                                    <th class="p-1">CGST <br>Amount</th>
+                                    {% else %}
+                                    <th class="p-1">IGST <br>Rate</th>
+                                    <th class="p-1">IGST <br>Amount</th>
+                                    {% endif %}
                                     <th class="p-1">Total</th>
                                 </tr>
                             </thead>
@@ -146,12 +156,32 @@
                                     <td class="p-1">{{i.Quantity}}</td>
                                     <td class="p-1">{{i.Rate}}</td>
                                     <td class="p-1">{{i.Amount}}</td>
+                                    {% if dt.Type == 'GST' %}
+                                    <td class="p-1">{{i.GSTRate}} %</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    <td class="p-1">{{i.GSTRate}} %</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    {% else %}
+                                    <td class="p-1">{{i.GSTRate}} %</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    {% endif %}
+                                    <td class="p-1 text-end">{{i.TotalAmount}}</td>
                                 </tr>
                                 {% endif %}
                                 {% endfor %}
                                 <tr>
                                     <td colspan="8" class="text-end p-1"><b>Total RC Amount :-</b></td>
                                     <td class="p-1">{{RCAmount}}</td>
+                                    {% if dt.Type == 'GST' %}
+                                    <td class="p-1"></td>
+                                    <td class="p-1 text-end">{{GRCAmount}}</td>
+                                    <td class="p-1"></td>
+                                    <td class="p-1 text-end">{{GRCAmount}}</td>
+                                    {% else %}
+                                    <td class="p-1"></td>
+                                    <td class="p-1 text-end">{{GRCAmount}}</td>
+                                    {% endif %}
+                                    <td class="p-1 text-end">{{RCGAmount}}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="9" class="text-center">Non RC Items ( Maximum Rs 10000 or 20% of RC Items cost which ever is lower will be considered for Non Rc items )</td>
@@ -170,12 +200,32 @@
                                     <td class="p-1">{{i.Quantity}}</td>
                                     <td class="p-1">{{i.Rate}}</td>
                                     <td class="p-1">{{i.Amount}}</td>
+                                    {% if dt.Type == 'GST' %}
+                                    <td class="p-1">{{i.GSTRate}} %</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    <td class="p-1">{{i.GSTRate}} %</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    {% else %}
+                                    <td class="p-1">{{i.GSTRate}} %</td>
+                                    <td class="p-1 text-end">{{i.GSTAmount}}</td>
+                                    {% endif %}
+                                    <td class="p-1 text-end">{{i.TotalAmount}}</td>
                                 </tr>
                                 {% endif %}
                                 {% endfor %}
                                 <tr>
                                     <td colspan="8" class="text-end p-1"><b>Total Non RC Amount :-</b></td>
                                     <td class="p-1">{{NAmount}}</td>
+                                    {% if dt.Type == 'GST' %}
+                                    <td class="p-1"></td>
+                                    <td class="p-1 text-end">{{GNAmount}}</td>
+                                    <td class="p-1"></td>
+                                    <td class="p-1 text-end">{{GNAmount}}</td>
+                                    {% else %}
+                                    <td class="p-1"></td>
+                                    <td class="p-1 text-end">{{GNAmount}}</td>
+                                    {% endif %}
+                                    <td class="p-1 text-end">{{NGAmount}}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -183,13 +233,25 @@
                                 <tr>
                                     <td colspan="8" class="text-end p-1"><b>Total Amount ( RC + Non RC )</b></td>
                                     <td class="p-1">{{Amount}}</td>
+                                    {% if dt.Type == 'GST' %}
+                                    <td class="p-1"></td>
+                                    <td class="p-1"></td>
+                                    <td class="p-1"></td>
+                                    <td class="p-1"></td>
+                                    {% else %}
+                                    <td class="p-1"></td>
+                                    <td class="p-1"></td>
+                                    {% endif %}
+                                    <td class="p-1 text-end">{{GAmount}}</td>
                                 </tr>
                             </tfoot>
                             <table style="border-bottom: 1px #000 solid !important;">
                                 <thead>
                                     <tr>
                                         <td class="">
-                                            <b>Total Invoice Value (In figure) - {{Amount}}</b><br>
+                                            <br>
+                                            <br>
+                                            <b>Total Invoice Value (In figure) - {{GAmount}}</b><br>
                                             <b>Total Invoice Value (In Words) - <b id="wrod" style="text-transform: capitalize"></b></b>
                                         </td>
                                     </tr>
@@ -265,7 +327,7 @@
     }
 
     // Example usage:
-    const amount = '{{Amount}}';
+    const amount = '{{GAmount}}';
     const amountInWords = convertToIndianWords(amount);
     var tamount2 = document.getElementById("wrod");
       tamount2.innerText = amountInWords;

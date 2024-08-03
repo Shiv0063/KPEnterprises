@@ -192,18 +192,6 @@ class InvoiceRCModel(models.Model):
 class QCountModel(models.Model):
     QuotationNo = models.IntegerField(default=0)
 
-class QTTModel(models.Model):
-    Counter = models.IntegerField(default=0,null=True, blank=True)
-    TYPES = models.CharField(max_length=100,null=True, blank=True)
-    RCCode = models.CharField(max_length=100,null=True, blank=True)
-    RCDescription = models.TextField(null=True, blank=True)
-    Quantity = models.CharField(max_length=100,null=True, blank=True)
-    HSNCode = models.IntegerField(default=0,null=True, blank=True)
-    Unit = models.CharField(max_length=100,null=True, blank=True)
-    Rate = models.CharField(max_length=100,default='0',null=True, blank=True)
-    Labour = models.CharField(max_length=100,default='0',null=True, blank=True)
-    Amount = models.CharField(max_length=100,default='0',null=True, blank=True)
-
 class QuotationModel(models.Model):
     Counter = models.IntegerField(default=0)
     QuotationNo = models.IntegerField(default=0,null=True, blank=True) 
@@ -225,10 +213,36 @@ class QuotationModel(models.Model):
     Amount = models.CharField(max_length=100,null=True, blank=True)
     GSTAmount = models.CharField(max_length=100,null=True, blank=True)
     TotalAmount = models.CharField(max_length=100,null=True, blank=True)
-    
+    Type = models.CharField(max_length=100,null=True, blank=True)
+    BRName = models.CharField(max_length=100,null=True, blank=True)
+    MOBILENO = models.CharField(max_length=100,null=True, blank=True)
+    EmailID = models.CharField(max_length=100,null=True, blank=True)
+    ASDDate = models.DateField(null=True, blank=True)
+    ASDNo = models.CharField(max_length=100,null=True, blank=True)
+
     def ndate(self):
         return self.Date.strftime('%d-%m-%Y')
     
+    def NASDDate(self):
+        return self.ASDDate.strftime('%d-%m-%Y')
+    
+class QTTGSTModel(models.Model):
+    Counter = models.IntegerField(default=0,null=True, blank=True)
+    TYPES = models.CharField(max_length=100,null=True, blank=True)
+    RCCode = models.CharField(max_length=100,null=True, blank=True)
+    RCDescription = models.TextField(null=True, blank=True)
+    Quantity = models.CharField(max_length=100,null=True, blank=True)
+    HSNCode = models.IntegerField(default=0,null=True, blank=True)
+    Unit = models.CharField(max_length=100,null=True, blank=True)
+    Rate = models.CharField(max_length=100,default='0',null=True, blank=True)
+    Labour = models.CharField(max_length=100,default='0',null=True, blank=True)
+    Amount = models.CharField(max_length=100,default='0',null=True, blank=True)
+    GSTRate = models.CharField(max_length=100,null=True, blank=True)
+    GSTAmount = models.CharField(max_length=100,null=True, blank=True)
+    GSTTA = models.CharField(max_length=100,default='0',null=True, blank=True)
+    TotalAmount = models.CharField(max_length=100,default='0',null=True, blank=True)
+
+
 class ProfileModel(models.Model):
     UserName = models.CharField(max_length=100, null=True, blank=True)
     CompanyName = models.CharField(max_length=100, null=True, blank=True)

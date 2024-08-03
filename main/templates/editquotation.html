@@ -123,6 +123,33 @@
                                 <label for="inputEmail4" class="form-label">Area Of Work</label>
                                 <input type="text" class="form-control" id="inputCity" name="AreaOfWork" value="{{dt.AreaOfWork}}">
                             </div>
+                            <div class="col-md-4">
+                                <label class="form-label"><b>Tax</b></label>
+                                <select class="form-select" name="Type">
+                                    <option value="GST" {% if dt.Type == 'GST' %} selected {% endif %}>GST</option>
+                                    <option value="IGST" {% if dt.Type == 'IGST' %} selected {% endif %}>IGST</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="inputEmail4" class="form-label">Branch Representative Name</label>
+                                <input type="text" class="form-control" id="inputCity" name="BRName" value="{{dt.BRName}}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="inputEmail4" class="form-label">Email ID</label>
+                                <input type="email" class="form-control" id="inputCity" name="EmailID" value="{{dt.EmailID}}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="inputEmail4" class="form-label">MOBILE NO</label>
+                                <input type="text" class="form-control" id="inputCity" name="MOBILENO" value="{{dt.MOBILENO}}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="inputEmail4" class="form-label">ASD No</label>
+                                <input type="text" class="form-control" id="inputCity" name="ASDNo" value="{{dt.ASDNo}}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">ASD Date</label>
+                                <input type="date" name="ASDDate" class="form-control" id="ASDDate" required>
+                            </div>
                             <div class="col-md-6">
                                 <label for="inputAddress" class="form-label">Remark</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" name="Remark"
@@ -155,29 +182,18 @@
                             {% csrf_token %}
                             <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-md-4" id="">
-                                        <label for="" class="form-label">Type</label>
-                                        <select class="form-select" name="TYPES" id="TYPES" onchange="TYPE()" required>
-                                            <option value="RCCode" id="RCCodeSLT">RC Code</option>
-                                            <option value="NonRCCode" id="NonRCCodeSLT">Non RC Code</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-8" id="RCcodeF">
+                                    <div class="col-md-12" id="RCcodeF">
                                         <div id="RC">
                                             <label for="" class="form-label">RC Code</label>
                                             <select class="form-select" name="RCCode" id="RCCode" required>
                                                 <option>--Select--</option>
                                                 {% for i in RC %}
-                                                <option value="{{i.CodeNo}}">{{i.CodeNo}}</option>
+                                                <option value="{{i.CodeNo}}">{{i.CodeNo}}-- {{i.Description}}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <div id="NRC" style="display: none;">
-                                            <label for="" class="form-label">Non RC Code</label>
-                                            <input type="text" class="form-control" name="NRCCode" id="NRCCode">
-                                        </div>
                                         <input type="hidden" name="sid" id="sid">
-                                        <input type="hidden" id="Counter" value="{{CM.QuotationNo}}">
+                                        <input type="hidden" id="Counter" value="{{dt.QuotationNo}}">
                                     </div>
                                 </div>
                                 <div class="col-md-12 mt-2">
@@ -284,6 +300,8 @@
     }
     DF = new Date('{{dt.Date}}')
     document.getElementById("Date").value = formatDate(DF);
+    DF2 = new Date('{{dt.ASDDate}}')
+    document.getElementById("ASDDate").value = formatDate(DF2);
     $("#formAdd select[name='PartyName']").on('change', function () {
         var $this = $(this);
         if ($this.val() != '') {
@@ -397,6 +415,8 @@
                 success: function (resp) {
                     RCV = $('#Rate');
                     RCV.val(resp.RC);
+                    RCV2 = $('#RCDescription');
+                    RCV2.val(resp.RCDescription);
                 },
                 error: function (resp) {
                     console.log('Something went wrong');
